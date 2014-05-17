@@ -1,0 +1,5 @@
+cmake_minimum_required(VERSION 2.8)
+project( linFilter )
+find_package( OpenCV REQUIRED )
+add_executable( linFilter linFilter.cpp )
+target_link_libraries( linFilter ${OpenCV_LIBS} )

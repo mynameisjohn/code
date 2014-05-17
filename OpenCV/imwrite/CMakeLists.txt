@@ -1,0 +1,5 @@
+cmake_minimum_required(VERSION 2.8)
+project( imwrite )
+find_package( OpenCV REQUIRED )
+add_executable( imwrite imwrite.cpp )
+target_link_libraries( imwrite ${OpenCV_LIBS} )

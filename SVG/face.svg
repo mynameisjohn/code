@@ -1,0 +1,91 @@
+<?xml version="1.0"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+         "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns="http://www.w3.org/2000/svg"
+     xmlns:xlink="http://www.w3.org/1999/xlink"
+     width="750" height="600">
+<!--
+green: #33EE00
+red: #FF2200
+blue: #0022DD
+orange:#FF5500
+purple: #6611BB
+yellow: #FFFF00
+-->
+
+<circle cx='375' cy='300' r='200'/>
+
+<path d="M250,325 
+	C250,475 500,475 500,325 
+	Z" 
+	fill='none' stroke='#DDD' stroke-width='7'/>
+
+<path d='M355 337
+	L 395,337
+	L 395,377
+	L 355,377
+	Z ' 
+	fill='#61B' stroke='#000' stroke-width='5'/>
+<path d='M310,337
+        L 350,337
+        L 350,377
+        L 310,377
+        Z ' 
+        fill='#F20' stroke='#000' stroke-width='5'/>
+
+
+<path d='M305 337 
+	L 305,377  
+	L 280,377 
+	Q 263,367 263,337
+	Z ' 
+	fill='#3E0' stroke='#000' stroke-width='5'/>
+
+<path d='M400,337
+        L 440,337
+        L 440,377
+        L 400,377
+        Z ' 
+        fill='#02D' stroke='#000' stroke-width='5'/>
+
+
+<path d='M445 337 
+        L 445,377  
+        L 470,377 
+        Q 487,367 487,337
+	Z' 
+        fill='#F50' stroke='#000' stroke-width='5'/>
+
+<path d='M355 382
+        L 395,382
+        L 395,422
+        Q 375,427 355,422
+        Z ' 
+        fill='#3E0' stroke='#000' stroke-width='5'/>
+
+<path d='M310,382
+        L 350,382
+        L 350,422
+        Q 310,417 310,402
+        Z ' 
+        fill='#02D' stroke='#000' stroke-width='5'/>
+
+<path d='M400,382
+        L 400,422
+        Q 440,417 440,402
+	L 440,402 440,382
+        Z ' 
+        fill='#F20' stroke='#000' stroke-width='5'/>
+
+<path d='M445,382
+        L 475,382
+        Q 460,402 445,407
+        Z ' 
+        fill='#61B' stroke='#000' stroke-width='5'/>
+
+<path d='M305,382
+        L 275,382
+        Q 290,402 305,407
+        Z ' 
+        fill='#F50' stroke='#000' stroke-width='5'/>
+</svg>

@@ -1,0 +1,5 @@
+cmake_minimum_required(VERSION 2.8)
+project( DoGFilter )
+find_package( OpenCV REQUIRED )
+add_executable( DoGFilter DoGFilter.cpp )
+target_link_libraries( DoGFilter ${OpenCV_LIBS} )
