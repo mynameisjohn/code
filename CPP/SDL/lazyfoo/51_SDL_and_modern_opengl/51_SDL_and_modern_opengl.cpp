@@ -47,7 +47,7 @@ bool gRenderQuad = true;
 
 //Graphics program
 GLuint gProgramID = 0;
-GLint gVertexPos3DLocation = -1;
+GLint gVertexPos2DLocation = -1;
 GLuint gVBO = 0;
 GLuint gIBO = 0;
 
@@ -64,12 +64,11 @@ bool init()
 	}
 	else
 	{
-		//Use OpenGL 3.0 core
+		//Use OpenGL 3.1 core
 		SDL_GL_SetAttribute( SDL_GL_CONTEXT_MAJOR_VERSION, 3 );
 		SDL_GL_SetAttribute( SDL_GL_CONTEXT_MINOR_VERSION, 0 );
 		SDL_GL_SetAttribute( SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE );
-		
-		SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER,1);
+
 		//Create window
 		gWindow = SDL_CreateWindow( "SDL Tutorial", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN );
 		if( gWindow == NULL )
@@ -91,7 +90,7 @@ bool init()
 				//Initialize GLEW
 				glewExperimental = GL_TRUE; 
 				GLenum glewError = glewInit();
-				if( glewError != GLEW_OK)
+				if( glewError != GLEW_OK )
 				{
 					printf( "Error initializing GLEW! %s\n", glewGetErrorString( glewError ) );
 				}
@@ -129,7 +128,7 @@ bool initGL()
 	//Get vertex source
 	const GLchar* vertexShaderSource[] =
 	{
-		"#version 130\nin vec3 LVertexPos3D; void main() { gl_Position = vec4( LVertexPos3D.x, LVertexPos3D.y, 0, 1 ); }"
+		"#version 130\nin vec2 LVertexPos2D;fd void main() { gl_Position = vec4( LVertexPos2D.x, LVertexPos2D.y, 0, 1 ); }"
 	};
 
 	//Set vertex source
@@ -159,7 +158,7 @@ bool initGL()
 		//Get fragment source
 		const GLchar* fragmentShaderSource[] =
 		{
-			"#version 130\nout vec4 LFragment; void main() { LFragment = vec4( 1.0, 1.0, 0.5, 1.0 ); }"
+			"#version 130\nout vec4 LFragment; void main() { LFragment = vec4( 1.0, 1.0, 1.0, 1.0 ); }"
 		};
 
 		//Set fragment source
@@ -198,10 +197,10 @@ bool initGL()
 			else
 			{
 				//Get vertex attribute location
-				gVertexPos3DLocation = glGetAttribLocation( gProgramID, "LVertexPos3D" );
-				if( gVertexPos3DLocation == -1 )
+				gVertexPos2DLocation = glGetAttribLocation( gProgramID, "LVertexPos2D" );
+				if( gVertexPos2DLocation == -1 )
 				{
-					printf( "LVertexPos3D is not a valid glsl program variable!\n" );
+					printf( "LVertexPos2D is not a valid glsl program variable!\n" );
 					success = false;
 				}
 				else
@@ -212,10 +211,10 @@ bool initGL()
 					//VBO data
 					GLfloat vertexData[] =
 					{
-						-0.5f, -0.5f,0.0f,
-						 0.5f, -0.5f,0.0f,
-						 0.5f,  0.5f,1.0f,
-						-0.5f,  0.5f,1.0f
+						-0.5f, -0.5f,
+						 0.5f, -0.5f,
+						 0.5f,  0.5f,
+						-0.5f,  0.5f
 					};
 
 					//IBO data
@@ -224,7 +223,7 @@ bool initGL()
 					//Create VBO
 					glGenBuffers( 1, &gVBO );
 					glBindBuffer( GL_ARRAY_BUFFER, gVBO );
-					glBufferData( GL_ARRAY_BUFFER, 3 * 4 * sizeof(GLfloat), vertexData, GL_STATIC_DRAW );
+					glBufferData( GL_ARRAY_BUFFER, 2 * 4 * sizeof(GLfloat), vertexData, GL_STATIC_DRAW );
 
 					//Create IBO
 					glGenBuffers( 1, &gIBO );
@@ -264,18 +263,18 @@ void render()
 		glUseProgram( gProgramID );
 
 		//Enable vertex position
-		glEnableVertexAttribArray( gVertexPos3DLocation );
+		glEnableVertexAttribArray( gVertexPos2DLocation );
 
 		//Set vertex data
 		glBindBuffer( GL_ARRAY_BUFFER, gVBO );
-		glVertexAttribPointer( gVertexPos3DLocation, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), NULL );
+		glVertexAttribPointer( gVertexPos2DLocation, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), NULL );
 
 		//Set index data and render
 		glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, gIBO );
 		glDrawElements( GL_TRIANGLE_FAN, 4, GL_UNSIGNED_INT, NULL );
 
 		//Disable vertex position
-		glDisableVertexAttribArray( gVertexPos3DLocation );
+		glDisableVertexAttribArray( gVertexPos2DLocation );
 
 		//Unbind program
 		glUseProgram( NULL );

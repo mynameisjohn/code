@@ -5,9 +5,16 @@ and may not be redistributed without written permission.*/
 #include "LUtil.h"
 //#include <IL/il.h>
 //#include <IL/ilu.h>
+<<<<<<< HEAD
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include "LTexture.h"
+=======
+#include "LTexture.h"
+
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
+>>>>>>> 75244c4ba46194045ae98710e59c4400b318b04d
 
 //Circle image
 LTexture gCircleTexture;
@@ -39,6 +46,7 @@ bool initGL()
         printf( "Error initializing OpenGL! %s\n", gluErrorString( error ) );
         return false;
     }
+<<<<<<< HEAD
 
     //Initialize DevIL and DevILU
     //ilInit();
@@ -48,6 +56,14 @@ bool initGL()
 	 SDL_Init(SDL_INIT_VIDEO);
     IMG_Init(IMG_INIT_PNG) 
 /*
+=======
+/*
+    //Initialize DevIL and DevILU
+    ilInit();
+    iluInit();
+    ilClearColour( 255, 255, 255, 000 );
+
+>>>>>>> 75244c4ba46194045ae98710e59c4400b318b04d
     //Check for error
     ILenum ilError = ilGetError();
     if( ilError != IL_NO_ERROR )
@@ -56,6 +72,13 @@ bool initGL()
         return false;
     }
 */
+<<<<<<< HEAD
+=======
+
+	 SDL_Init(SDL_INIT_VIDEO);
+	 IMG_Init(INIT_IMG_PNG);
+
+>>>>>>> 75244c4ba46194045ae98710e59c4400b318b04d
     return true;
 }
 
@@ -74,10 +97,17 @@ bool loadMedia()
     //Calculate target color
     GLuint targetColor;
     GLubyte* colors = (GLubyte*)&targetColor;
+<<<<<<< HEAD
     colors[ 0 ] = 000;
     colors[ 1 ] = 255;
     colors[ 2 ] = 255;
     colors[ 3 ] = 255;
+=======
+    colors[ 0 ] = 0x00;
+    colors[ 1 ] = 0xFF;
+    colors[ 2 ] = 0xFF;
+    colors[ 3 ] = 0xFF;
+>>>>>>> 75244c4ba46194045ae98710e59c4400b318b04d
 
     //Replace target color with transparent black
     GLuint* pixels = gCircleTexture.getPixelData32();

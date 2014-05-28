@@ -53,7 +53,7 @@ bool init(){
    }
 
    gRenderer = SDL_CreateRenderer(gWindow,-1,SDL_RENDERER_ACCELERATED);
-   if( gWindow == NULL ){
+   if( gRenderer == NULL ){
       cout << SDL_GetError() << endl;
       return false;
    }

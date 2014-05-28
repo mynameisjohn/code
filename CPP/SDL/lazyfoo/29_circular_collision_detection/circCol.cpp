@@ -43,7 +43,7 @@ class Dot{
    public:
       static const int DOT_WIDTH=20;
       static const int DOT_HEIGHT=20;
-      static const int DOT_VEL=25;
+      static const int DOT_VEL=7;
       Dot(int x, int y);
       void handleEvent(SDL_Event& e);
       void move(SDL_Rect& square,Circle& circle);
@@ -176,11 +176,6 @@ bool checkCollision(Circle& a, Circle& b){
 	return false;
 }
 
-int checkCollision(SDL_Rect& a, SDL_Rect& b){
-	//we are checking to see if a is going to collide with b
-	const int FROM_LEFT=0x1, FROM_RIGHT=0x2, FROM_TOP=0x4, FROM_BOTTOM=0x8;
-}
-
 bool checkCollision(Circle& a, SDL_Rect& b){
 	int dX, dY;
 
@@ -311,7 +306,7 @@ int main(int argc, char** argv){
 		dot.move(wall,otherDot.getCollider());
 		SDL_SetRenderDrawColor(gRenderer,0xFF,0xFF,0xFF,0xFF);
 		SDL_RenderClear(gRenderer);
-		//std::cout << dot.getCollider().x << ", " << dot.getCollider().y << std::endl;
+		std::cout << dot.getCollider().x << ", " << dot.getCollider().y << std::endl;
 		dot.render();
 		otherDot.render();
 		SDL_SetRenderDrawColor(gRenderer,0xFF,0x00,0x00,0xFF);

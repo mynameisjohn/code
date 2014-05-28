@@ -7,6 +7,10 @@ and may not be redistributed without written permission.*/
 //#include <IL/ilu.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+<<<<<<< HEAD
+=======
+#include <iostream>
+>>>>>>> 75244c4ba46194045ae98710e59c4400b318b04d
 
 LTexture::LTexture()
 {
@@ -33,11 +37,19 @@ bool LTexture::loadTextureFromFile( std::string path )
 {
     //Texture loading success
     bool textureLoaded = false;
+<<<<<<< HEAD
+=======
+
+>>>>>>> 75244c4ba46194045ae98710e59c4400b318b04d
 /*
     //Generate and set current image ID
     ILuint imgID = 0;
     ilGenImages( 1, &imgID );
     ilBindImage( imgID );
+<<<<<<< HEAD
+=======
+	 
+>>>>>>> 75244c4ba46194045ae98710e59c4400b318b04d
 
     //Load image
     ILboolean success = ilLoadImage( path.c_str() );
@@ -75,12 +87,33 @@ bool LTexture::loadTextureFromFile( std::string path )
         ilDeleteImages( 1, &imgID );
     }
 */
+<<<<<<< HEAD
 	 SDL_Surface * surface = IMG_Load("circle.png");
 	 if (surface==NULL)
 		 return false;
 	 
 
 
+=======
+
+	SDL_Surface * surface = IMG_Load("circle.png");
+	if (surface==NULL)
+		return false;
+	
+	GLubyte * pixels = (GLubyte *)surface->pixels;
+
+	GLuint texWidth = powerOfTwo(surface->w);
+	GLuint texHeight = powerOfTwo(surface->h);
+
+	if (texWidth != surface->w || texHeight != surface->h){
+		SDL_Rect stretch={0,0,texWidth,texHeight};
+	   SDL_BlitScaled(surface,NULL,surface,&stretch);
+		if (!surface){
+			std::cout << SDL_GetError() << std::endl;
+			return false;
+		}
+	}
+>>>>>>> 75244c4ba46194045ae98710e59c4400b318b04d
     //Report error
     if( !textureLoaded )
     {
