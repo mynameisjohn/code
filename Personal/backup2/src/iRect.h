@@ -19,28 +19,16 @@ typedef struct iRect{
 	int w; int h;
 } iRect;
 
-inline int bottom(iRect rect){
-	return rect.y+rect.h;
-}
-
-inline int top(iRect rect){
-	return rect.y;
-}
-
-inline int right(iRect rect){
-	return rect.x+rect.w;
-}
-
-inline int left(iRect rect){
-	return rect.x;
-}
-
-
-/*
+int bottom(iRect rect);
+int top(iRect rect);
+int right(iRect rect);
+int left(iRect rect);
 bool vCollision(iRect A, iRect B);
 bool hCollision(iRect A, iRect B);
 bool checkCollision(iRect A, iRect B);
 
+
+/*
 int bottom(iRect rect){
 	return rect.y+rect.h;
 }

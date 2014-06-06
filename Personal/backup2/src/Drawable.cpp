@@ -9,7 +9,6 @@ Drawable::Drawable(){
 	visible = true;
 	isEntity = false;
 	myEntity = NULL;
-	myCollider = NULL;
 }
 
 Drawable::~Drawable(){
@@ -60,14 +59,6 @@ bool Drawable::hasEntity(){
 	return myEntity != NULL;
 }
 
-void Drawable::setCollider(Collider * c){
-	myCollider = c;
-}
-
-bool Drawable::hasCollider(){
-	return myCollider != NULL;
-}
-
 void Drawable::getEntityMV(){
 	if (myEntity != NULL)
 		leftMultMV(glm::translate(myEntity->getTranslate()));
@@ -75,10 +66,6 @@ void Drawable::getEntityMV(){
 
 Entity * Drawable::getEntityPtr(){
 	return myEntity;
-}
-
-Collider * Drawable::getColPtr(){
-	return myCollider;
 }
 
 GLfloat * Drawable::getMVPtr(){

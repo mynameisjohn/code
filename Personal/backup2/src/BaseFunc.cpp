@@ -45,10 +45,10 @@ bool initGL(){
 	Player square_e;
 	Collider rect_sc;
 
-	/*iRect top;
+	iRect top;
 	top.x=250; top.y=150; //SPACE_HEIGHT/2;
 	top.w=5; top.h=200;
-	rect_sc.setTop(top);*/
+	rect_sc.setTop(top);
 	scenery.push_back(rect_sc);
 
 	std::vector<bool> xFirst;
@@ -71,7 +71,6 @@ bool initGL(){
    drawables.push_back(tri2_dr);   entities.push_back(tri2_e);
    drawables.push_back(square_dr); entities.push_back(square_e);
 
-	drawables[0].setCollider(&scenery[0]);
 	drawables[1].setEntity(&entities[0]);
 	drawables[2].setEntity(&entities[1]);
 	drawables[3].setEntity(&entities[2]);
@@ -120,9 +119,9 @@ bool initGeom(Drawable * dr, std::string src, int x, int y){
 
       for (int i=0; i<nVert; i++){
          std::getline(in, str, ' ');
-         vertices[i*2]=(GLfloat)std::stof(str) + (GLfloat) x;
+         vertices[i*2]=(GLfloat)std::stof(str)+(float)x;
          std::getline(in, str, ' ');
-         vertices[i*2+1]=(GLfloat)std::stof(str) + (GLfloat) y;
+         vertices[i*2+1]=(GLfloat)std::stof(str)+(float)y;
       }
 
       GLuint indices [nVert];
@@ -147,8 +146,8 @@ bool initGeom(Drawable * dr, std::string src, int x, int y){
       dr->setVBO(tmpVBO);
       dr->setIBO(tmpIBO);
 
-		if (dr->hasEntity() || dr->hasCollider()){
-			//Entity * e = dr->getEntityPtr();
+		if (dr->hasEntity()){
+			Entity * e = dr->getEntityPtr();
 
 			std::getline(in, str);
 			std::getline(in, str);
@@ -168,12 +167,7 @@ bool initGeom(Drawable * dr, std::string src, int x, int y){
 			std::getline(in, str, ' ');
 			top.h=std::stoi(str);
 
-			if (dr->hasEntity())
-				dr->getEntityPtr()->setTop(top);
-			else if (dr->hasCollider()){
-				dr->getColPtr()->setTop(top);
-				//printf("%d\n",nSubCol);
-			}
+			e->setTop(top);
 
 			for (int i=0; i<nSubCol; i++){
 				iRect tmp;
@@ -189,12 +183,7 @@ bool initGeom(Drawable * dr, std::string src, int x, int y){
 				std::getline(in, str, ' ');
 				tmp.h=std::stoi(str);
 
-				if (dr->hasEntity())
-			      dr->getEntityPtr()->setTop(top);
-	         else if (dr->hasCollider())
-		         dr->getColPtr()->setTop(top);
-
-				//e->addSub(tmp);
+				e->addSub(tmp);
 			}
 		}
    }

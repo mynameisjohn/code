@@ -7,7 +7,7 @@ Entity::Entity(){
 	mPos = glm::vec3();
 	mVelX = 0;
 	mVelY = 0;
-	mSpeed = 5;
+	mSpeed = 10;
 }
 
 Entity::~Entity(){

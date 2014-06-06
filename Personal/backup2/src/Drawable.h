@@ -22,11 +22,8 @@ class Drawable{
 		bool isVisible();
 		void setEntity(Entity * e);
 		bool hasEntity();
-		void setCollider(Collider * c);
-		bool hasCollider();
 		void getEntityMV();
 		Entity * getEntityPtr();
-		Collider * getColPtr();
 		GLfloat * getMVPtr();
 		GLfloat * getColorPtr();
 	private:
@@ -36,7 +33,6 @@ class Drawable{
 		bool visible;
 		bool isEntity;
 		Entity * myEntity;
-		Collider * myCollider;
 };
 
 #endif

@@ -1,5 +1,4 @@
 #include "Player.h"
-#include <stdio.h>
 
 void Player::handleEvent(SDL_Event& e){
    if( e.type == SDL_KEYDOWN && e.key.repeat == 0 ){
@@ -18,10 +17,4 @@ void Player::handleEvent(SDL_Event& e){
          case SDLK_d: mVelX -= mSpeed; break;
       }
    }
-	/*
-	else if (e.key.keysym.sym == SDLK_UP)
-		printf("Speed is now: %d\n", mSpeed++);
-	else if (e.key.keysym.sym == SDLK_DOWN)
-      printf("Speed is now: %d\n", mSpeed--);
-	*/	
 }
