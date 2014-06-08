@@ -85,12 +85,12 @@ bool init(){
       printf( "Error initializing GLEW! %s\n", glewGetErrorString(glewError));
       return false;
    }
-/*	
+	
 	//Use Vsync
    if( SDL_GL_SetSwapInterval(1) < 0 ){
       printf( "Warning: Unable to set VSync! SDL Error: %s\n", SDL_GetError());
    }
-*/
+
 	//Initialize OpenGL
    if( !initGL()){
       printf( "Unable to initialize OpenGL!\n" );

@@ -10,10 +10,16 @@ class JShader : public ShaderProgram{
 		bool loadVert(std::string vertStr);//Load Vert Shader from string
 		bool loadFrag(std::string fragStr);//Load Frag Shader from string
 		GLint getPosHandle();              //get vertex position handle
+		GLuint getTexCoordHandle();
+		GLuint getTexHandle();
 		void updateProj(GLfloat * proj);   //update proj, send to GPU
 		void updateMV(GLfloat * MV);       //update MV, send to GPU
 		void updateColor(GLfloat * color); //update color, send to GPU
+		void updateSampler();
 	private:
+		GLuint mTexCoordHandle; //Handle to Texture Coordinates
+		GLuint mTexHandle;      //Handle to texture sampler
+		GLuint texture;         //Handle to texture
 		GLint mMVHandle;   //Handle to MV matrix
 		GLint mProjHandle; //Handle to Projection Matrix
 		GLint mColorHandle;//Handle to Frag Color (needed?)

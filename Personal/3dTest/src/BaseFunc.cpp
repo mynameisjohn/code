@@ -17,6 +17,7 @@ std::vector<Drawable> drawables;
 std::vector<Entity> entities;
 std::vector<Collider> scenery;
 Player * playerPtr;
+KeyboardHandler handler;
 
 bool initGL(){
 	//Load Vertex/Fragment Shader files
@@ -33,7 +34,6 @@ bool initGL(){
 	glm::mat4 proj = glm::ortho<GLfloat>(0.0,
 								SPACE_WIDTH, SPACE_HEIGHT, 0.0, 1.0, -1.0);
 	shader.updateProj(glm::value_ptr(proj));
-	shader.unbind();
 
 	//For the purpose of this example, the drawables will be
 	//	+ 1 Rectangle (passive)
@@ -56,12 +56,12 @@ bool initGL(){
 	tri1_e.setXFirst(xFirst);
 	tri2_e.setXFirst(xFirst);
 	square_e.setXFirst(xFirst);
-	
+/*	
 	rect_dr.setColor(1.f, 0.2f, 0.2f);
 	tri1_dr.setColor(1.f, 0.3f, 0.f);
 	tri2_dr.setColor(0.f, 0.5f, 0.8f);
 	square_dr.setColor(0.1f, 0.3f, 0.7f);
-
+*/
 	tri1_e.setWalls(0, 0, SPACE_WIDTH, SPACE_HEIGHT);
 	tri2_e.setWalls(0, 0, SPACE_WIDTH, SPACE_HEIGHT);
 	square_e.setWalls(0, 0, SPACE_WIDTH, SPACE_HEIGHT);
@@ -98,7 +98,7 @@ bool initGL(){
       return false;
    }
 
-	glClearColor(0.f, 0.f, 0.f, 1.f);
+	glClearColor(0.2f, 0.2f, 0.2f, 1.f);
 
 	return true;
 }
@@ -127,29 +127,47 @@ bool initGeom(Drawable * dr, std::string src, int x, int y){
 
       GLuint indices [nVert];
 
+		const GLfloat texCoords[] =
+        {0.0f, 0.0f,
+        0.0f, 1.0f,
+        1.0f, 1.0f,
+        1.0f, 0.0f};
+
 		for (int i=0; i<nVert; i++){
          std::getline(in, str, ' ');
          indices[i]=(GLuint)std::stoi(str);
       }
 
-      GLuint tmpVBO, tmpIBO;
+      GLuint tmpVBO, tmpIBO, tmpTBO;
 
-      //Create VBO
-      glGenBuffers( 1, &tmpVBO );
-      glBindBuffer( GL_ARRAY_BUFFER, tmpVBO );
-      glBufferData( GL_ARRAY_BUFFER, 2 * nVert * sizeof(GLfloat), vertices, GL_STATIC_DRAW );
+		GLuint tmpVAO;
+		glGenVertexArrays(1, &tmpVAO);
+		glBindVertexArray(tmpVAO);
 
-      //Create IBO
-      glGenBuffers( 1, &tmpIBO );
-      glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, tmpIBO );
+		GLuint buffers[3];
+		glGenBuffers(3, buffers);
+
+		//vertices
+		glBindBuffer(GL_ARRAY_BUFFER, buffers[0]);
+		glBufferData(GL_ARRAY_BUFFER, 2*nVert*sizeof(GLfloat), vertices, GL_STATIC_DRAW);
+		glEnableVertexAttribArray(shader.getPosHandle());
+		glVertexAttribPointer(shader.getPosHandle(), 2, GL_FLOAT, 0, 0, 0);
+
+		//tex coords
+		glBindBuffer(GL_ARRAY_BUFFER, buffers[1]);
+      glBufferData(GL_ARRAY_BUFFER, 2*nVert*sizeof(GLfloat), texCoords, GL_STATIC_DRAW);
+      glEnableVertexAttribArray(shader.getTexCoordHandle());
+      glVertexAttribPointer(shader.getTexCoordHandle(), 2, GL_FLOAT, 0, 0, 0);
+
+		//indices
+		glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, buffers[2] );
       glBufferData( GL_ELEMENT_ARRAY_BUFFER, nVert * sizeof(GLuint), indices, GL_STATIC_DRAW );
-
-      dr->setVBO(tmpVBO);
-      dr->setIBO(tmpIBO);
+		
+		glBindVertexArray(0);
+	    
+		dr->setVAO(tmpVAO);
 
 		if (dr->hasEntity() || dr->hasCollider()){
-			//Entity * e = dr->getEntityPtr();
-
 			std::getline(in, str);
 			std::getline(in, str);
 
@@ -172,7 +190,6 @@ bool initGeom(Drawable * dr, std::string src, int x, int y){
 				dr->getEntityPtr()->setTop(top);
 			else if (dr->hasCollider()){
 				dr->getColPtr()->setTop(top);
-				//printf("%d\n",nSubCol);
 			}
 
 			for (int i=0; i<nSubCol; i++){
@@ -193,8 +210,6 @@ bool initGeom(Drawable * dr, std::string src, int x, int y){
 			      dr->getEntityPtr()->setTop(top);
 	         else if (dr->hasCollider())
 		         dr->getColPtr()->setTop(top);
-
-				//e->addSub(tmp);
 			}
 		}
    }
@@ -221,7 +236,9 @@ void closeShader(){
 }
 
 void handleEvent(SDL_Event& e){
-	playerPtr->handleEvent(e);
+	if (e.key.repeat == 0 && (e.type == SDL_KEYUP || e.type == SDL_KEYDOWN))
+		handler.handleKey((int)e.key.keysym.sym);
+	playerPtr->handleEvent(&handler);
 }
 
 void render(){
@@ -234,16 +251,9 @@ void render(){
          shader.bind();
          shader.updateMV(drIter->getMVPtr());
          shader.updateColor(drIter->getColorPtr());
-
-         glEnableVertexAttribArray(shader.getPosHandle());
-         glBindBuffer(GL_ARRAY_BUFFER, drIter->getVBO());
-         glVertexAttribPointer(shader.getPosHandle(), 2, GL_FLOAT, GL_FALSE,
-                               2*sizeof(GL_FLOAT), NULL);
-
-         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, drIter->getIBO());
-         glDrawElements(GL_TRIANGLE_FAN, 4, GL_UNSIGNED_INT, NULL);
-         glDisableVertexAttribArray(shader.getPosHandle());
-         shader.unbind();
+			glBindVertexArray(drIter->getVAO());
+			glDrawElements(GL_TRIANGLE_FAN, 4, GL_UNSIGNED_INT, NULL);
+			shader.unbind();
       }
    }
 }

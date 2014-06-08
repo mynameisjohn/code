@@ -14,10 +14,14 @@ class Drawable{
 		~Drawable();
 		void setMV(glm::mat4 newMatrix);
 		void setColor(float r, float g, float b);
+		void setVAO(GLuint  VAO);
 		void setVBO(GLint VBO);
 		void setIBO(GLint IBO);
+		void setTBO(GLint TBO);
+		GLuint getVAO();
 		GLint getVBO();
 		GLint getIBO();
+		GLint getTBO();
 		void leftMultMV(glm::mat4 left);
 		bool isVisible();
 		void setEntity(Entity * e);
@@ -32,7 +36,8 @@ class Drawable{
 	private:
 		glm::mat4 MV;
 		glm::vec4 mColor; //probably phase this out
-		GLint mVBO, mIBO;
+		GLint mVBO, mIBO, mTBO;
+		GLuint mVAO;
 		bool visible;
 		bool isEntity;
 		Entity * myEntity;

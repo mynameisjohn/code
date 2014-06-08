@@ -1,7 +1,29 @@
 #include "Player.h"
 #include <stdio.h>
+#include "KeyboardHandler.h"
 
-void Player::handleEvent(SDL_Event& e){
+void Player::handleEvent(KeyboardHandler * handler){
+
+	int dash = handler->getKeyState((int)SDLK_SPACE) ? 2 : 1;
+	int speed = mSpeed * dash;
+
+	if (handler->getKeyState((int)SDLK_w))
+		mVelY = -speed;
+   else if (handler->getKeyState((int)SDLK_s))
+      mVelY = speed;
+	else
+		mVelY = 0;
+
+	if (handler->getKeyState((int)SDLK_a))
+      mVelX = -speed;
+   else if (handler->getKeyState((int)SDLK_d))
+      mVelX = speed;
+   else
+      mVelX = 0;
+
+
+
+/*
    if( e.type == SDL_KEYDOWN && e.key.repeat == 0 ){
       switch(e.key.keysym.sym){
          case SDLK_w: mVelY -= mSpeed; break;
@@ -18,10 +40,5 @@ void Player::handleEvent(SDL_Event& e){
          case SDLK_d: mVelX -= mSpeed; break;
       }
    }
-	/*
-	else if (e.key.keysym.sym == SDLK_UP)
-		printf("Speed is now: %d\n", mSpeed++);
-	else if (e.key.keysym.sym == SDLK_DOWN)
-      printf("Speed is now: %d\n", mSpeed--);
-	*/	
+*/
 }

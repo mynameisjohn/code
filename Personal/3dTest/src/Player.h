@@ -3,11 +3,12 @@
 
 #include <SDL2/SDL.h>
 
+#include "KeyboardHandler.h"
 #include "Drawable.h"
 
 class Player : public Entity{
 	public:
-		void handleEvent(SDL_Event& e);
+		void handleEvent(KeyboardHandler * handler);
 };
 
 #endif

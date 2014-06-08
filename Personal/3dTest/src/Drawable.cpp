@@ -28,6 +28,10 @@ void Drawable::setColor(float r, float g, float b){
 	mColor.w=1.f;
 }
 
+void Drawable::setVAO(GLuint VAO){
+	mVAO = VAO;
+}
+
 void Drawable::setVBO(GLint VBO){
 	mVBO = VBO;
 }
@@ -36,12 +40,24 @@ void Drawable::setIBO(GLint IBO){
 	mIBO = IBO;
 }
 
+void Drawable::setTBO(GLint TBO){
+	mTBO = TBO;
+}
+
+GLuint Drawable::getVAO(){
+	return mVAO;
+}
+
 GLint Drawable::getVBO(){
 	return mVBO;
 }
 
 GLint Drawable::getIBO(){
 	return mIBO;
+}
+
+GLint Drawable::getTBO(){
+	return mTBO;
 }
 
 void Drawable::leftMultMV(glm::mat4 left){
