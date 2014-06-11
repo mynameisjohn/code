@@ -35,6 +35,10 @@ inline int left(iRect rect){
 	return rect.x;
 }
 
+inline void shift(iRect rect, int x, int y){
+	rect.x+=x;
+	rect.y+=y;
+}
 
 /*
 bool vCollision(iRect A, iRect B);

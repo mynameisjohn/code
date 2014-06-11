@@ -34,35 +34,78 @@ bool initGL(){
 	glm::mat4 proj = glm::ortho<GLfloat>(0.0,
 								SPACE_WIDTH, SPACE_HEIGHT, 0.0, 1.0, -1.0);
 	shader.updateProj(glm::value_ptr(proj));
+/*
+	std::vector<bool> xFirst;
+   xFirst.push_back(false);
+	//Initialize Player
+	Drawable player_dr;
+	Player player;
+	player.setXFirst(xFirst);
+	player.setWalls(0, 0, SPACE_WIDTH, SPACE_HEIGHT);
+	entities.push_back(player);
+	player_dr.setEntity((Entity *)&entities.back());
+	drawables.push_back(player_dr);
+	//initSquare(drawables.back(), 300, 100);
+	playerPtr = (Player *)(&entities.back());
+
+	//Initialize other squares
+	Entity sq1_e;
+	sq1_e.setXFirst(xFirst);
+	sq1_e.setWalls(0, 0, SPACE_WIDTH, SPACE_HEIGHT);
+	entities.push_back(sq1_e);
+	Drawable sq1_dr;
+	sq1_dr.setEntity((Entity *)&entities.back());
+	drawables.push_back(sq1_dr);
+	//initSquare(drawables.back(), 200, 200);
+
+	Entity sq2_e;
+   sq2_e.setXFirst(xFirst);
+   sq2_e.setWalls(0, 0, SPACE_WIDTH, SPACE_HEIGHT);
+   entities.push_back(sq2_e);
+   Drawable sq2_dr;
+   sq1_dr.setEntity((Entity *)&entities.back());
+   drawables.push_back(sq2_dr);
+	//initSquare(drawables.back(), 200, 0);
+
+	//Initialize Scenery
+	Collider rect_sc;
+	scenery.push_back(rect_sc);
+	Drawable rect_dr;
+	rect_dr.setCollider(&scenery.back());
+	drawables.push_back(rect_dr);
+	//initSquare(drawables.back(), 0, 200);
+	printf("how are ya\n");
+*/
+
 
 	//For the purpose of this example, the drawables will be
 	//	+ 1 Rectangle (passive)
 	// + 2 Triangles (aggressive)
 	// + 2 Square (player)
-
+/*
 	Drawable rect_dr, tri1_dr, tri2_dr, square_dr;
 	Entity tri1_e, tri2_e;
 	Player square_e;
 	Collider rect_sc;
-
+*/
 	/*iRect top;
 	top.x=250; top.y=150; //SPACE_HEIGHT/2;
 	top.w=5; top.h=200;
 	rect_sc.setTop(top);*/
-	scenery.push_back(rect_sc);
+/*	scenery.push_back(rect_sc);
 
 	std::vector<bool> xFirst;
 	xFirst.push_back(false);
 	tri1_e.setXFirst(xFirst);
 	tri2_e.setXFirst(xFirst);
 	square_e.setXFirst(xFirst);
-/*	
+*/	/*
 	rect_dr.setColor(1.f, 0.2f, 0.2f);
 	tri1_dr.setColor(1.f, 0.3f, 0.f);
 	tri2_dr.setColor(0.f, 0.5f, 0.8f);
 	square_dr.setColor(0.1f, 0.3f, 0.7f);
-*/
-	tri1_e.setWalls(0, 0, SPACE_WIDTH, SPACE_HEIGHT);
+   */
+/*	tri1_e.setWalls(0, 0, SPACE_WIDTH, SPACE_HEIGHT);
 	tri2_e.setWalls(0, 0, SPACE_WIDTH, SPACE_HEIGHT);
 	square_e.setWalls(0, 0, SPACE_WIDTH, SPACE_HEIGHT);
 
@@ -78,6 +121,13 @@ bool initGL(){
 
 	playerPtr = (Player *)(&entities.back());
 
+	initSquare(drawables[0], 3*SPACE_WIDTH/4, SPACE_HEIGHT/2);
+	initSquare(drawables[1], SPACE_WIDTH/4, SPACE_HEIGHT/2);
+	initSquare(drawables[2], 3*SPACE_WIDTH/4, SPACE_HEIGHT/4);
+	initSquare(drawables[3], 0, SPACE_HEIGHT/2);
+	printf("fine\n");
+*/
+/*
    if (!initGeom(&drawables[3], "geom/square.geom", 3*SPACE_WIDTH/4, SPACE_HEIGHT/2)){
       printf("Error initializing geometry.\n");
       return false;
@@ -97,14 +147,160 @@ bool initGL(){
       printf("Error initializing geometry.\n");
       return false;
    }
+*/
+	addSquare(3*SPACE_WIDTH/4, SPACE_HEIGHT/2, 1);
+	addSquare(0, SPACE_HEIGHT/2, 1);
+	addSquare(200, 100, 3);
+	addSquare(350, 350, 2);
 
 	glClearColor(0.2f, 0.2f, 0.2f, 1.f);
 
 	return true;
 }
 
+bool addSquare(int x, int y, int type){
+	const GLfloat vertices[4][2] = {
+		{0.f, 0.f}, {40.f, 0.f},
+		{0.f, 40.f}, {40.f, 40.f}
+	};
+   const GLfloat texCoords[4][2] = {
+		{0.f, 0.f}, {1.f, 0.f},
+		{0.f, 1.f}, {1.f, 1.f}
+	};
+
+	const GLuint indices[4] = {0, 1, 2, 3};
+
+	Drawable dr;
+
+	GLuint tmpVAO;
+   glGenVertexArrays(1, &tmpVAO);
+   glBindVertexArray(tmpVAO);
+
+	GLuint buffers[3];
+	glGenBuffers(3, buffers);
+
+	//vertices
+	glBindBuffer(GL_ARRAY_BUFFER, buffers[0]);
+	glBufferData(GL_ARRAY_BUFFER, 2*4*sizeof(GLfloat), vertices, GL_STATIC_DRAW);
+	glEnableVertexAttribArray(shader.getPosHandle());
+	glVertexAttribPointer(shader.getPosHandle(), 2, GL_FLOAT, 0, 0, 0);
+
+	//tex coords
+	glBindBuffer(GL_ARRAY_BUFFER, buffers[1]);
+	glBufferData(GL_ARRAY_BUFFER, 2*4*sizeof(GLfloat), texCoords, GL_STATIC_DRAW);
+	glEnableVertexAttribArray(shader.getTexCoordHandle());
+	glVertexAttribPointer(shader.getTexCoordHandle(), 2, GL_FLOAT, 0, 0, 0);
+
+	//indices
+	glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, buffers[2] );
+	glBufferData( GL_ELEMENT_ARRAY_BUFFER, 4 * sizeof(GLuint), indices, GL_STATIC_DRAW );
+
+	dr.setVAO(tmpVAO);
+	glBindVertexArray(0);
+	dr.leftMultMV(glm::translate(glm::vec3(x, y, 0)));
+	drawables.push_back(dr);
+
+	iRect top;
+	top.x=x; top.y=y;
+	top.w=40; top.h=40;
+
+	if (type == 1){
+		std::vector<bool> xFirst;
+		xFirst.push_back(false);
+		Entity e;
+		e.setTop(top);
+		e.setWalls(0, 0, SPACE_WIDTH, SPACE_HEIGHT);
+		e.setXFirst(xFirst);
+		entities.push_back(e);
+		drawables.back().setEntity(&(entities.back()));		
+	}
+	else if (type == 2){
+		std::vector<bool> xFirst;
+      xFirst.push_back(false);
+      Player p;
+		p.setTop(top);
+      p.setWalls(0, 0, SPACE_WIDTH, SPACE_HEIGHT);
+      p.setXFirst(xFirst);
+      entities.push_back(p);
+      drawables.back().setEntity((Entity *)(&(entities.back())));
+		playerPtr = (Player *)(&(entities.back()));
+	}
+	else if (type == 3){
+		Collider sc;
+		sc.setTop(top);
+		scenery.push_back(sc);
+		drawables.back().setCollider(&(scenery.back()));
+	}
+	else
+		return false;
+
+	return tmpVAO>0;	
+}
+
+bool initSquare(Drawable& dr, int x, int y){
+const GLfloat hardvertices[4][2] = {
+         {0.f, 0.f}, {40.f, 0.f},
+         {0.f, 40.f}, {40.f, 40.f}
+      };
+      const GLfloat hardtexCoords[4][2] = {
+         {0.f, 0.f}, {1.f, 0.f},
+         {0.f, 1.f}, {1.f, 1.f}
+      };
+      const GLuint hardindices[4] = {0, 1, 2, 3};
+
+
+
+      const GLfloat texCoords[6][2] ={
+        {0.0f, 0.0f},
+        {1.0f, 0.0f},
+         {0.f, 0.5f},
+         {1.f, 0.5f},
+        {0.0f, 1.0f},
+        {1.0f, 1.0f}
+      };
+GLuint tmpVAO;
+      glGenVertexArrays(1, &tmpVAO);
+      glBindVertexArray(tmpVAO);
+
+      GLuint buffers[3];
+      glGenBuffers(3, buffers);
+
+      //vertices
+      glBindBuffer(GL_ARRAY_BUFFER, buffers[0]);
+      glBufferData(GL_ARRAY_BUFFER, 2*4*sizeof(GLfloat), hardvertices, GL_STATIC_DRAW);
+      glEnableVertexAttribArray(shader.getPosHandle());
+      glVertexAttribPointer(shader.getPosHandle(), 2, GL_FLOAT, 0, 0, 0);
+
+      //tex coords
+      glBindBuffer(GL_ARRAY_BUFFER, buffers[1]);
+      glBufferData(GL_ARRAY_BUFFER, 2*4*sizeof(GLfloat), hardtexCoords, GL_STATIC_DRAW);
+      glEnableVertexAttribArray(shader.getTexCoordHandle());
+      glVertexAttribPointer(shader.getTexCoordHandle(), 2, GL_FLOAT, 0, 0, 0);
+
+      //indices
+      glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, buffers[2] );
+      glBufferData( GL_ELEMENT_ARRAY_BUFFER, 4 * sizeof(GLuint), hardindices, GL_STATIC_DRAW );
+
+      glBindVertexArray(0);
+      dr.leftMultMV(glm::translate(glm::vec3(x, y, 0)));
+      iRect top;
+      top.x=x; top.y=y;
+      top.w=40; top.h=40;
+      //shift(top, x, y);
+
+      if (dr.hasEntity())
+         dr.getEntityPtr()->setTop(top);
+      else if (dr.hasCollider())
+         dr.getColPtr()->setTop(top);
+
+
+      dr.setVAO(tmpVAO);
+	
+	return true;
+}
+
 bool initGeom(Drawable * dr, std::string src, int x, int y){
-   std::ifstream in;
+/*   std::ifstream in;
    in.open(src.c_str());
    if (!in.good()){
       printf("Invalid geometry file.\n");
@@ -127,19 +323,35 @@ bool initGeom(Drawable * dr, std::string src, int x, int y){
 
       GLuint indices [nVert];
 
-		const GLfloat texCoords[] =
-        {0.0f, 0.0f,
-        0.0f, 1.0f,
-        1.0f, 1.0f,
-        1.0f, 0.0f};
+*/
+		const GLfloat hardvertices[4][2] = {
+			{0.f, 0.f}, {40.f, 0.f},
+			{0.f, 40.f}, {40.f, 40.f}
+		};
+		const GLfloat hardtexCoords[4][2] = {
+			{0.f, 0.f}, {1.f, 0.f},
+			{0.f, 1.f}, {1.f, 1.f}
+		};
+	   const GLuint hardindices[4] = {0, 1, 2, 3};
 
+	
+
+		const GLfloat texCoords[6][2] ={
+        {0.0f, 0.0f},
+        {1.0f, 0.0f},
+			{0.f, 0.5f},
+			{1.f, 0.5f},
+        {0.0f, 1.0f},
+        {1.0f, 1.0f}
+		};
+/*
 		for (int i=0; i<nVert; i++){
          std::getline(in, str, ' ');
          indices[i]=(GLuint)std::stoi(str);
       }
 
       GLuint tmpVBO, tmpIBO, tmpTBO;
-
+*/
 		GLuint tmpVAO;
 		glGenVertexArrays(1, &tmpVAO);
 		glBindVertexArray(tmpVAO);
@@ -149,24 +361,38 @@ bool initGeom(Drawable * dr, std::string src, int x, int y){
 
 		//vertices
 		glBindBuffer(GL_ARRAY_BUFFER, buffers[0]);
-		glBufferData(GL_ARRAY_BUFFER, 2*nVert*sizeof(GLfloat), vertices, GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, 2*4*sizeof(GLfloat), hardvertices, GL_STATIC_DRAW);
 		glEnableVertexAttribArray(shader.getPosHandle());
 		glVertexAttribPointer(shader.getPosHandle(), 2, GL_FLOAT, 0, 0, 0);
 
 		//tex coords
 		glBindBuffer(GL_ARRAY_BUFFER, buffers[1]);
-      glBufferData(GL_ARRAY_BUFFER, 2*nVert*sizeof(GLfloat), texCoords, GL_STATIC_DRAW);
+      glBufferData(GL_ARRAY_BUFFER, 2*4*sizeof(GLfloat), hardtexCoords, GL_STATIC_DRAW);
       glEnableVertexAttribArray(shader.getTexCoordHandle());
       glVertexAttribPointer(shader.getTexCoordHandle(), 2, GL_FLOAT, 0, 0, 0);
 
 		//indices
 		glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, buffers[2] );
-      glBufferData( GL_ELEMENT_ARRAY_BUFFER, nVert * sizeof(GLuint), indices, GL_STATIC_DRAW );
+      glBufferData( GL_ELEMENT_ARRAY_BUFFER, 4 * sizeof(GLuint), hardindices, GL_STATIC_DRAW );
 		
 		glBindVertexArray(0);
-	    
+
+		dr->leftMultMV(glm::translate(glm::vec3(x, y, 0)));
+		iRect top;
+		top.x=x; top.y=y;
+		top.w=40; top.h=40;
+	   //shift(top, x, y);
+
+		if (dr->hasEntity())
+			dr->getEntityPtr()->setTop(top);
+		else if (dr->hasCollider())
+			dr->getColPtr()->setTop(top);
+
+		    
 		dr->setVAO(tmpVAO);
 
+
+/*
 		if (dr->hasEntity() || dr->hasCollider()){
 			std::getline(in, str);
 			std::getline(in, str);
@@ -217,7 +443,7 @@ bool initGeom(Drawable * dr, std::string src, int x, int y){
       printf("Syntax Error in geometry file.\n");
       return false;
    }
-
+*/
    return true;
 }
 
@@ -252,8 +478,9 @@ void render(){
          shader.updateMV(drIter->getMVPtr());
          shader.updateColor(drIter->getColorPtr());
 			glBindVertexArray(drIter->getVAO());
-			glDrawElements(GL_TRIANGLE_FAN, 4, GL_UNSIGNED_INT, NULL);
+			glDrawElements(GL_TRIANGLE_STRIP, 4, GL_UNSIGNED_INT, NULL);
 			shader.unbind();
       }
    }
 }
+

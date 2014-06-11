@@ -3,7 +3,7 @@
 #include <time.h>
 
 Entity::Entity(){
-	mTranslate = glm::vec3();
+	mTranslate = {0, 0, 0};
 	mPos = glm::vec3();
 	mVelX = 0;
 	mVelY = 0;
@@ -45,6 +45,8 @@ void Entity::move(std::vector<Entity>& entities, std::vector<Collider>& scenery)
 	mCollider.move(mVelX, mVelY, oldX, oldY);
 	//Now handle other entities and scenery
 	int i=0;
+
+
 	std::vector<Collider>::iterator colIter;
 	for (colIter=scenery.begin(); colIter!=scenery.end(); colIter++){
 		bool colX = mCollider.overlaps_X(*colIter);
@@ -77,7 +79,7 @@ void Entity::move(std::vector<Entity>& entities, std::vector<Collider>& scenery)
 		if (!(&(*this) == &(*eIter))){
 			if (this->collidesWith(eIter)){
 				//do something, maybe print?
-				fprintf(stdout, "ITS %u\n O CLOCK READ IT GET OUT", (unsigned)time(NULL));
+				//fprintf(stdout, "ITS %u\n O CLOCK READ IT GET OUT", (unsigned)time(NULL));
 			}
 		}
 	}

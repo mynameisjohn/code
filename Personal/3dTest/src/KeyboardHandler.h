@@ -1,6 +1,8 @@
 #ifndef KEYBOARDHANDLER_H
 #define KEYBOARDHANDLER_H
 
+#include <stdio.h>
+
 class KeyboardHandler{
 public:
 	KeyboardHandler(){

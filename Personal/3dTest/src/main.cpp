@@ -92,7 +92,7 @@ bool init(){
    }
 
 	//Initialize OpenGL
-   if( !initGL()){
+   if(!initGL()){
       printf( "Unable to initialize OpenGL!\n" );
       return false;
    }

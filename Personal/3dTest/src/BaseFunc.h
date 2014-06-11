@@ -21,4 +21,8 @@ void render();
 
 void closeShader();
 
+bool initSquare(Drawable& dr, int x, int y);
+
+bool addSquare(int x, int y, int type);
+
 #endif
