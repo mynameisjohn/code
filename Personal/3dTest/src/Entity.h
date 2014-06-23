@@ -1,36 +1,22 @@
 #ifndef ENTITY_H
 #define ENTITY_H
 
-//Do I really need GLM?
-#define GLM_FORCE_RADIANS
-#include <glm/glm.hpp>
-#include <vector>
 #include "Collider.h"
-#include "iRect.h"
-
-class Collider;
 
 class Entity{
 	public:
 		Entity();
-		~Entity();
-		void setSpeed(int speed);
-		void moveTo(glm::vec3 dest);
-		void translate(glm::vec3 translate);
-		void setWalls(int x, int y, int X, int Y); 
-		void setTop(iRect top);
-		void addSub(iRect sub);
-		void update();
-		void move(std::vector<Entity>& entities, std::vector<Collider>& scenery);
-		glm::vec3 getTranslate();
-		void setXFirst(std::vector<bool> new_xFirst);
-		bool collidesWith(std::vector<Entity>::iterator);
+		Entity(Collider c);
+		void setCol(Collider c);
+		void setBB(BoundBox bb);
+		void translate(int, int, int);
+		bool collidesWith(Entity& e);
+		bool overlapsWith(Entity& e);
+		glm::vec3 getPos();
 	protected:
 		Collider mCollider;
-		glm::vec3 mTranslate;
 		glm::vec3 mPos;
-		std::vector<bool> xFirst;
-		int mVelX, mVelY, mSpeed;
 };
+
 
 #endif

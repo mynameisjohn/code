@@ -1,114 +1,101 @@
 #include "Collider.h"
+#include <glm/glm.hpp>
+
+#include <stdio.h>
 
 Collider::Collider(){
-	mTop.x=0;
-	mTop.y=0;
-	mTop.w=10;
-	mTop.h=10;
-	wall_x=0;
-	wall_y=0;
-	wall_X=400;
-	wall_Y=300;
+	w_x=0;
+	w_y=0;
+	w_z=0;
+	w_X=400;
+	w_Y=300;
+	w_Z=300;
 }
 
-Collider::~Collider(){
-	mSub.clear();
-}
-
-void Collider::setTop(iRect top){
-	mTop = top;
+void Collider::setBB(BoundBox bb){
+	mBB = bb;
 }
 
 void Collider::addSub(iRect sub){
-	mSub.push_back(sub);
+	mSubs.push_back(sub);
 }
 
-void Collider::setWalls(int x, int y, int X, int Y){
-	wall_x=x;
-	wall_y=y;
-	wall_X=X;
-	wall_Y=Y;
-}
-
-void Collider::moveTo(int x, int y){
-	int tX = (x>0) ? x-mTop.x : 0;
-	int tY = (y>0) ? y-mTop.y : 0;
-	mTop.x+=tX;
-	mTop.y+=tY;
-	std::vector<iRect>::iterator iRiter;
-	for (iRiter=mSub.begin();iRiter!=mSub.end();iRiter++){
-		iRiter->x+=tX;
-		iRiter->y+=tY;
-	}
-}
-
-void Collider::move(int velX, int velY, int& oldX, int& oldY){
-	//glm::vec3 translate = glm::vec3();
-	oldX = mTop.x;
-	oldY = mTop.y;
-
-	if (mTop.x + velX < wall_x)
-		mTop.x = wall_x;
-	else if (mTop.x + mTop.w + velX > wall_X)
-		mTop.x = wall_X - mTop.w;
-	else
-		mTop.x += velX;
-
-	if (mTop.y + velY < wall_y)
-		mTop.y = wall_y;
-	else if (mTop.y + mTop.h + velY > wall_Y)
-		mTop.y = wall_Y - mTop.h;
-	else
-		mTop.y += velY;
-/*
-	translate.x = mTop.x - oldX;
-	translate.y = mTop.y - oldY;
-
-	return translate;
-*/
-}
-
-glm::vec3 Collider::diff(int oldX, int oldY){
-	glm::vec3 translate = {mTop.x-oldX, mTop.y-oldY, 0};
-	return translate;
+void Collider::setWalls(int x, int y, int z, int X, int Y, int Z){
+	w_x=x;
+	w_y=y;
+	w_z=z;
+	w_X=X;
+	w_Y=Y;
+	w_Z=Z;
 }
 
 void Collider::clearSub(){
-	mSub.clear();
+	mSubs.clear();
 }
 
-bool Collider::overlaps_X(Collider& other){
-	return !(right(mTop) <= left(other.mTop) || left(mTop) >= right(other.mTop));
+void Collider::translate(int x, int y, int z){
+	mBB.translate(x,y,z);
+	
+	std::vector<iRect>::iterator rectIt;
+	for (rectIt=mSubs.begin(); rectIt!=mSubs.end(); rectIt++)
+		rectIt->translate(x,y);
 }
 
-bool Collider::overlaps_Y(Collider& other){
-	return !(bottom(mTop) <= top(other.mTop) || top(mTop) >= bottom(other.mTop));
+//I don't like these casts...I should bite the bullet and create an iVec class
+glm::vec3 Collider::move(glm::vec3 vel){
+	glm::vec3 translate; //(mBB.left(), mBB.bottom(),0.f); // mBB.top());
+
+	if (mBB.left() + vel.x < w_x)
+		translate.x = (mBB.left() - w_x);
+	else if (mBB.right() + vel.x > w_X)
+		translate.x = (w_X - mBB.right());
+	else
+		translate.x += vel.x;
+
+	if (mBB.top() + vel.y < w_y)
+		translate.y = (mBB.top() - w_y);
+	else if (mBB.bottom() + vel.y > w_Y)
+		translate.y = (w_Y - mBB.bottom());
+	else
+		translate.y += vel.y;
+
+	this->translate((int)translate.x, (int)translate.y, (int)translate.z);
+/*
+	if (mBB.near() + vel.z < w_z)
+		translate.z = (mBB.near() - w_z);
+	else if (mBB.far() + vel.z > w_Z)
+		translate.z = (w_Z - mBB.far());
+	else
+		translate.z += vel.z;
+*/
+	
+	return translate;
+}
+
+bool Collider::collidesX(Collider& other){
+	return mBB.collidesX(other.mBB);
+}
+bool Collider::collidesY(Collider& other){
+	return mBB.collidesY(other.mBB);
+}
+
+bool Collider::collidesZ(Collider& other){
+	return mBB.collidesZ(other.mBB);
 }
 
 bool Collider::collidesWith(Collider& other){
-	return (overlaps_X(other) && overlaps_Y(other));
+	return mBB.collidesX(other.mBB) && mBB.collidesY(other.mBB) && mBB.collidesZ(other.mBB);
 }
 
-int Collider::getTopTop(){
-	return top(mTop);
-}
-
-int Collider::getTopBottom(){
-	return bottom(mTop);
-}
-
-int Collider::getTopRight(){
-	return right(mTop);
-}
-
-int Collider::getTopLeft(){
-	return left(mTop);
-}
-
-int Collider::getTop_h(){
-	return mTop.h;
-}
-
-int Collider::getTop_w(){
-	return mTop.w;
+bool Collider::overlapsWith(Collider& other){
+	if (collidesWith(other)){
+		std::vector<iRect>::iterator rectIt1, rectIt2;
+		for (rectIt1=mSubs.begin(); rectIt1!=mSubs.end(); rectIt1++){
+			for (rectIt2=mSubs.begin(); rectIt2!=mSubs.end(); rectIt2++){
+				if (rectIt1->overlapsWith(*rectIt2))
+					return true;
+			}
+		}
+	}
+	return false;
 }

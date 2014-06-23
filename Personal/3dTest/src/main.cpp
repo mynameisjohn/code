@@ -1,23 +1,12 @@
 #include <GL/glew.h>
 #include <GL/gl.h>
-#include <GL/glu.h>
-
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_opengl.h>
-
-#include <stdio.h>
-
 #include "BaseFunc.h"
 
 #define SCREEN_WIDTH 640
 #define SCREEN_HEIGHT 480
 
-//ADD SCENERY THINGS WITH COLLISION
-//TEXTURES
-//3D CUBES AND WHATNOT
 
 bool init();
-
 void close();
 
 SDL_Window * gWindow;
@@ -27,18 +16,21 @@ int main(int argc, char ** argv){
 	//Initialize Everything
 	if (!init()){
 	   printf( "Failed to initialize!\n" );
-      return false;
+      return EXIT_FAILURE;
    }
 
+	//polling boolean
 	bool quit = false;
 	SDL_Event e;
 
+	//main event loop
 	while (!quit){
 		while (SDL_PollEvent(&e) != 0){
 			if (e.type == SDL_QUIT)
 				quit = true;
 			handleEvent(e);
 		}
+		move();
 		update();
 		render();
 		SDL_GL_SwapWindow(gWindow);

@@ -1,24 +1,26 @@
-#include <GL/gl.h>
 #include "Drawable.h"
+#include <glm/gtc/type_ptr.hpp>
+#include <glm/gtx/transform.hpp>
 
 Drawable::Drawable(){
 	MV = glm::mat4();
 	mColor = {1.f, 1.f, 1.f, 1.f};
-	mVBO = -1;
-	mIBO = -1;
+	mPos = glm::vec3();
 	visible = true;
-	isEntity = false;
 	myEntity = NULL;
-	myCollider = NULL;
 }
 
 Drawable::~Drawable(){
-	mVBO = -1;
-	mIBO = -1;
+	mVAO = 0;
+	myEntity = NULL;
 }
 
 void Drawable::setMV(glm::mat4 newMatrix){
 	MV = newMatrix;
+}
+
+void Drawable::identity(){
+	MV = glm::mat4();
 }
 
 void Drawable::setColor(float r, float g, float b){
@@ -32,69 +34,26 @@ void Drawable::setVAO(GLuint VAO){
 	mVAO = VAO;
 }
 
-void Drawable::setVBO(GLint VBO){
-	mVBO = VBO;
-}
-
-void Drawable::setIBO(GLint IBO){
-	mIBO = IBO;
-}
-
-void Drawable::setTBO(GLint TBO){
-	mTBO = TBO;
-}
-
-GLuint Drawable::getVAO(){
-	return mVAO;
-}
-
-GLint Drawable::getVBO(){
-	return mVBO;
-}
-
-GLint Drawable::getIBO(){
-	return mIBO;
-}
-
-GLint Drawable::getTBO(){
-	return mTBO;
-}
-
 void Drawable::leftMultMV(glm::mat4 left){
 	MV = left * MV;
-}
-
-bool Drawable::isVisible(){
-	return visible;
 }
 
 void Drawable::setEntity(Entity * e){
 	myEntity = e;
 }
 
-bool Drawable::hasEntity(){
-	return myEntity != NULL;
+void Drawable::updateMV(){
+	glm::vec3 translate = myEntity->getPos() - mPos;
+	leftMultMV(glm::translate(translate));
+	mPos += translate;	
 }
 
-void Drawable::setCollider(Collider * c){
-	myCollider = c;
+bool Drawable::isVisible(){
+	return visible;
 }
 
-bool Drawable::hasCollider(){
-	return myCollider != NULL;
-}
-
-void Drawable::getEntityMV(){
-	if (myEntity != NULL)
-		leftMultMV(glm::translate(myEntity->getTranslate()));
-}
-
-Entity * Drawable::getEntityPtr(){
-	return myEntity;
-}
-
-Collider * Drawable::getColPtr(){
-	return myCollider;
+GLuint Drawable::getVAO(){
+	return mVAO;
 }
 
 GLfloat * Drawable::getMVPtr(){

@@ -1,10 +1,6 @@
 #ifndef DRAWABLE_H
 #define DRAWABLE_H
-//GLM Stuff
-#define GLM_FORCE_RADIANS
-#include <glm/glm.hpp>
-#include <glm/gtc/type_ptr.hpp>
-#include <glm/gtx/transform.hpp>
+
 #include <GL/gl.h>
 #include "Entity.h"
 
@@ -13,35 +9,24 @@ class Drawable{
 		Drawable();
 		~Drawable();
 		void setMV(glm::mat4 newMatrix);
+		void identity();
 		void setColor(float r, float g, float b);
 		void setVAO(GLuint  VAO);
-		void setVBO(GLint VBO);
-		void setIBO(GLint IBO);
-		void setTBO(GLint TBO);
-		GLuint getVAO();
-		GLint getVBO();
-		GLint getIBO();
-		GLint getTBO();
+		void translate(GLfloat x, GLfloat y, GLfloat z);
 		void leftMultMV(glm::mat4 left);
-		bool isVisible();
 		void setEntity(Entity * e);
-		bool hasEntity();
-		void setCollider(Collider * c);
-		bool hasCollider();
-		void getEntityMV();
-		Entity * getEntityPtr();
-		Collider * getColPtr();
+		void updateMV();
+		bool isVisible();
+		GLuint getVAO();
 		GLfloat * getMVPtr();
 		GLfloat * getColorPtr();
 	private:
 		glm::mat4 MV;
 		glm::vec4 mColor; //probably phase this out
-		GLint mVBO, mIBO, mTBO;
+		glm::vec3 mPos;
 		GLuint mVAO;
 		bool visible;
-		bool isEntity;
 		Entity * myEntity;
-		Collider * myCollider;
 };
 
 #endif

@@ -1,76 +1,45 @@
-#ifndef IRECT_H
-#define IRECT_H
-/*
 class iRect{
 	public:
 		iRect();
-		~iRect();
-		bool vCollision(iRect * other);
-		bool hCollision(iRect * other);
-		bool checkCollision(iRect * other);
+		iRect(int w, int h);
+		iRect(int x, int y, int w, int h);
+		void translate(int x, int y);
+		inline int bottom();
+		inline int top();
+		inline int left();
+		inline int right();
+		inline bool overlapsX(iRect);
+		inline bool overlapsY(iRect);
+		inline bool overlapsWith(iRect);
 	private:
-		int x, y;
-		int w, h;
+		int x, y, w, h;
 };
-*/
 
-typedef struct iRect{
-	int x; int y;
-	int w; int h;
-} iRect;
 
-inline int bottom(iRect rect){
-	return rect.y+rect.h;
+inline int iRect::bottom(){
+	return y+h;
 }
 
-inline int top(iRect rect){
-	return rect.y;
+inline int iRect::top(){
+   return y;
 }
 
-inline int right(iRect rect){
-	return rect.x+rect.w;
+inline int iRect::left(){
+   return x; 
 }
 
-inline int left(iRect rect){
-	return rect.x;
+inline int iRect::right(){
+   return x+w;
 }
 
-inline void shift(iRect rect, int x, int y){
-	rect.x+=x;
-	rect.y+=y;
+inline bool iRect::overlapsX(iRect other){
+	return !(right() <= other.left() || left() >= other.right());
 }
 
-/*
-bool vCollision(iRect A, iRect B);
-bool hCollision(iRect A, iRect B);
-bool checkCollision(iRect A, iRect B);
-
-int bottom(iRect rect){
-	return rect.y+rect.h;
+inline bool iRect::overlapsY(iRect other){
+   return !(bottom() <= other.top() || top() >= other.bottom());
 }
 
-int top(iRect rect){
-	return rect.y;
+inline bool iRect::overlapsWith(iRect other){
+	return overlapsX(other) && overlapsY(other);
 }
-
-int right(iRect rect){
-	return rect.x+rect.w;
-}
-
-int left(iRect rect){
-	return rect.x;
-}
-
-bool vCollision(iRect A, iRect B){
-	return !(bottom(A) <= top(B) || top(A) >= bottom(B));
-}
-
-bool hCollision(iRect A, iRect B){
-   return !(right(A) <= left(B) || left(A) >= right(B));
-}
-
-bool checkCollision(iRect A, iRect B){
-   return (vCollision(A,B) && hCollision(A,B));
-}
-*/
-#endif

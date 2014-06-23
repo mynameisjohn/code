@@ -26,10 +26,17 @@ int main(){
 	example.push_back(x);
 	cout << example[0] << endl;
 
+	std::vector<int>::iterator it;
+	it=example.begin();
+	int * iPtr = &example[0];
+
 	int * y = &(example[0]);
 	*y=9;
 
-	cout << example[0] << endl;
+	cout << &*iPtr << ", " << &*it << endl;
+	cout << example.size() << endl;
+	example.emplace_back();
+	cout << example.size() << endl;
 	
    return 0;
 }

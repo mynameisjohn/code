@@ -1,14 +1,20 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
-#include <SDL2/SDL.h>
-
+#include "ActiveEnt.h"
 #include "KeyboardHandler.h"
-#include "Drawable.h"
 
-class Player : public Entity{
+class Player: public ActiveEnt{
 	public:
-		void handleEvent(KeyboardHandler * handler);
+		Player();
+		Player(Collider c);
+		~Player();
+		void setKeyHandler(KeyboardHandler *);
+		void update();
+		void getHandleInfo();
+		void move();
+	private:
+		KeyboardHandler * mHandler;
 };
 
 #endif

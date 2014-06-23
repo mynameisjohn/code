@@ -1,34 +1,34 @@
 #ifndef COLLIDER_H
 #define COLLIDER_H
 
-#include <glm/glm.hpp>
+#ifndef GLM_FORCE_RADIANS 
+#define GLM_FORCE_RADIANS 
+#endif 
+ 
+#include <glm/glm.hpp> 
+
 #include <vector>
+#include "BoundBox.h"
 #include "iRect.h"
 
 class Collider{
 	public:
 		Collider();
-		~Collider();
-		void setTop(iRect top);
+		void setBB(BoundBox);
 		void addSub(iRect sub);
-		void setWalls(int x, int y, int X, int Y);
+		void setWalls(int, int, int, int, int, int);
 		void clearSub();
-		void moveTo(int x, int y);
-		bool overlaps_X(Collider& other);
-		bool overlaps_Y(Collider& other);
-		bool collidesWith(Collider& other);
-		void move(int velX, int velY, int& oldX, int& oldY);
-		glm::vec3 diff(int oldX, int oldY);
-		int getTopTop();
-		int getTopBottom();
-		int getTopRight();
-		int getTopLeft();
-		int getTop_h();
-		int getTop_w();
+		void translate(int, int, int);
+		glm::vec3 move(glm::vec3 vel);
+		bool collidesX(Collider&);
+      bool collidesY(Collider&);
+		bool collidesZ(Collider&);
+      bool collidesWith(Collider&);
+		bool overlapsWith(Collider&);
 	private:
-		iRect mTop;
-		std::vector<iRect> mSub;
-		int wall_x, wall_y, wall_X, wall_Y;
+		BoundBox mBB;
+		std::vector<iRect> mSubs;
+		int w_x, w_y, w_z, w_X, w_Y, w_Z;	
 };
 
 #endif

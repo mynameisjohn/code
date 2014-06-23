@@ -2,6 +2,7 @@
 #define KEYBOARDHANDLER_H
 
 #include <stdio.h>
+#include <SDL2/SDL.h>
 
 class KeyboardHandler{
 public:
