@@ -3,6 +3,9 @@
 
 #include <stdio.h>
 
+//TODO
+//figure out something wrt glm vectors versus a custom class...is it a big deal?
+
 Collider::Collider(){
 	w_x=0;
 	w_y=0;
@@ -10,6 +13,11 @@ Collider::Collider(){
 	w_X=400;
 	w_Y=300;
 	w_Z=300;
+	cBufMap.clear();
+}
+
+Collider::~Collider(){
+	cBufMap.clear();
 }
 
 void Collider::setBB(BoundBox bb){
@@ -41,10 +49,11 @@ void Collider::translate(int x, int y, int z){
 		rectIt->translate(x,y);
 }
 
-//I don't like these casts...I should bite the bullet and create an iVec class
+//This just moves the collider with respect to the walls
 glm::vec3 Collider::move(glm::vec3 vel){
-	glm::vec3 translate; //(mBB.left(), mBB.bottom(),0.f); // mBB.top());
+	glm::vec3 translate;
 
+	//check wall collision, move accordingly in each dimension
 	if (mBB.left() + vel.x < w_x)
 		translate.x = (mBB.left() - w_x);
 	else if (mBB.right() + vel.x > w_X)
@@ -59,7 +68,7 @@ glm::vec3 Collider::move(glm::vec3 vel){
 	else
 		translate.y += vel.y;
 
-	this->translate((int)translate.x, (int)translate.y, (int)translate.z);
+	this->translate(translate.x, translate.y, translate.z);
 /*
 	if (mBB.near() + vel.z < w_z)
 		translate.z = (mBB.near() - w_z);
@@ -72,6 +81,7 @@ glm::vec3 Collider::move(glm::vec3 vel){
 	return translate;
 }
 
+//This whole thing should be inlined or something
 bool Collider::collidesX(Collider& other){
 	return mBB.collidesX(other.mBB);
 }
@@ -83,10 +93,27 @@ bool Collider::collidesZ(Collider& other){
 	return mBB.collidesZ(other.mBB);
 }
 
-bool Collider::collidesWith(Collider& other){
-	return mBB.collidesX(other.mBB) && mBB.collidesY(other.mBB) && mBB.collidesZ(other.mBB);
+char Collider::collidesWith(Collider& other){
+	bool colX, colY, colZ;
+	colX = mBB.collidesX(other.mBB);
+	colY = mBB.collidesY(other.mBB);
+	colZ = mBB.collidesZ(other.mBB);
+/*	
+	std::map<Collider *, ColBuf>::iterator mIt;
+	mIt = cBufMap.find(&other);
+	if (mIt == cBufMap.end()){
+		ColBuf cBuf;
+		char c = cBuf.handleCollision(colX, colY, colZ);
+		cBufMap[&other] = cBuf;
+		return c;
+	}
+
+	return mIt->second.handleCollision(colX, colY, colZ);
+*/
+	return cBufMap[&other].handleCollision(colX, colY, colZ);
 }
 
+//Checks to see if a) bounding boxes collided and b) one of the sub-rects overlap
 bool Collider::overlapsWith(Collider& other){
 	if (collidesWith(other)){
 		std::vector<iRect>::iterator rectIt1, rectIt2;

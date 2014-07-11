@@ -1,10 +1,18 @@
+/**
+TODO
+	-- comment code properly
+	-- create library/character libraries
+	-- test some sort of update with more entitities
+	-- AI (potential map)
+	-- 3D motion (figure out perspective projection matrix)
+**/
+
 #include "JShader.h"
 #include "BaseFunc.h"
 #include "Population.h"
 
 #include <string>
 
-//remove this asap
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtx/transform.hpp>
 
@@ -38,35 +46,41 @@ bool initGL(){
    return true;
 }
 
-bool initLevel(){
+void initPlayer(){
 	Drawable dr;
-	Obstacle obs;
-	Collider c;
 	BoundBox bb;
+	Collider c;
 	iRect rect;
 
-	//Walls are same for all
-	c.setWalls(0, 0, 0, 400, 300, 300);
-
-	//Player Stuff
 	Player * playerPtr = pop.getPlayer();
 	dr = initQuad();
 	bb = BoundBox(0, 0, 0, 40, 40, 40);
-	c.setBB(bb);
-	rect = iRect(0, 0, 40, 20);
-	c.addSub(rect);
-	rect = iRect(0, 20, 40, 20);
-	c.addSub(rect);
-	playerPtr->setCol(c);
-	playerPtr->translate(10, 20, 0);
-	playerPtr->setKeyHandler(&handler);
-	dr.setEntity((Entity *)playerPtr);
-	dr.setColor(0.2f, 0.4f, 0.8f);
-	c.clearSub();
-	drawables.push_back(dr);
-	
-	//Obstacle Stuff
-   dr = initQuad();
+   c.setBB(bb);
+   rect = iRect(0, 0, 40, 20);
+   c.addSub(rect);
+   rect = iRect(0, 20, 40, 20);
+   c.addSub(rect);
+   playerPtr->setCol(c);
+   playerPtr->translate(10, 20, 0);
+   playerPtr->setKeyHandler(&handler);
+   dr.setEntity((Entity *)playerPtr);
+   dr.setColor(0.2f, 0.4f, 0.8f);
+   drawables.push_back(dr);
+
+	return;
+}
+
+void initObstacle(int x, int y){
+	Drawable dr;
+   BoundBox bb;
+   Collider c;
+   iRect rect;
+
+	Obstacle obs;
+
+	dr = initQuad();
+   c = Collider();
+   c.setWalls(0, 0, 0, 400, 300, 300);
    bb = BoundBox(0, 0, 0, 40, 40, 40);
    c.setBB(bb);
    rect = iRect(0, 0, 40, 20);
@@ -74,14 +88,54 @@ bool initLevel(){
    rect = iRect(0, 20, 40, 20);
    c.addSub(rect);
    obs.setCol(c);
-	obs.translate(300, 200, 0);
-	pop.addObs(obs);
-   dr.setEntity(pop.lastObsAsEnt());
-	dr.setColor(0.8f, 0.4f, 0.2f);
+   obs.translate(x, y, 0);
+   dr.setEntity(pop.addObs(obs)); //lastObsAsEnt());
+   dr.setColor(0.8f, 0.4f, 0.2f);
    drawables.push_back(dr);
-	c.clearSub();
+
+	return;
+}
+
+void initAe(int x, int y){
+   Drawable dr;
+   BoundBox bb;
+   Collider c;
+   iRect rect;
+
+   ActiveEnt aE;
+
+   dr = initQuad();
+   c = Collider();
+   c.setWalls(0, 0, 0, 400, 300, 300);
+   bb = BoundBox(0, 0, 0, 40, 40, 40);
+   c.setBB(bb);
+   rect = iRect(0, 0, 40, 20);
+   c.addSub(rect);
+   rect = iRect(0, 20, 40, 20);
+   c.addSub(rect);
+   aE.setCol(c);
+   aE.translate(x, y, 0);
+   dr.setEntity(pop.addActiveEnt(aE)); //lastObsAsEnt());
+   dr.setColor(0.4f, 0.8f, 0.2f);
+   drawables.push_back(dr);
+
+   return;
+}
+
+//All of this will be moved to a separate library...in due time
+bool initLevel(){
+	int nObs = 2;
+	int nAe = 1;
+
+	pop.initObs(nObs);
+	pop.initAe(nAe);	
+
+	initPlayer();
 	
-	pop.createCollisionBuffers();
+	initObstacle(200, 200);
+	initObstacle(300, 0);
+
+	initAe(100, 100);
 
 	return true;
 }
@@ -156,15 +210,15 @@ void render(){
    glClear(GL_COLOR_BUFFER_BIT);
 
    std::vector<Drawable>::iterator drIter;
+	shader.bind();
    for (drIter = drawables.begin(); drIter != drawables.end(); drIter++){
       drIter->updateMV();
-      shader.bind();
       if (drIter->isVisible()){
          shader.updateMV(drIter->getMVPtr());
          shader.updateColor(drIter->getColorPtr());
          glBindVertexArray(drIter->getVAO());
          glDrawElements(GL_TRIANGLE_STRIP, 4, GL_UNSIGNED_INT, NULL);
       }
-      shader.unbind();
    }
+	shader.unbind();
 }

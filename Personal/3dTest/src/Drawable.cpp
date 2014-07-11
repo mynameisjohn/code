@@ -1,6 +1,7 @@
 #include "Drawable.h"
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtx/transform.hpp>
+#include <stdio.h>
 
 Drawable::Drawable(){
 	MV = glm::mat4();
@@ -43,9 +44,10 @@ void Drawable::setEntity(Entity * e){
 }
 
 void Drawable::updateMV(){
+	//printf("Drawable thinks it's %ld\n", (long)myEntity);
 	glm::vec3 translate = myEntity->getPos() - mPos;
 	leftMultMV(glm::translate(translate));
-	mPos += translate;	
+	mPos += translate;
 }
 
 bool Drawable::isVisible(){

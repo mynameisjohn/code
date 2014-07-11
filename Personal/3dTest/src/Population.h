@@ -10,16 +10,20 @@ class Population{
 		~Population();
 		void setPlayer(Player p);
 		void setKeyHandler(KeyboardHandler *);
-		void addObs(Obstacle obs);
 		void clearObs();
+		void clearAe();
 		void update();
 		void move();
-		void createCollisionBuffers();
+		void initObs(int);
+		void initAe(int);
 		Player * getPlayer();
-		Entity * lastObsAsEnt();
+		Entity * addObs(Obstacle obs);
+		Entity * addActiveEnt(ActiveEnt aE);
 	private:
 		Player player;
 		std::vector<Obstacle> obsVec;
+		std::vector<ActiveEnt> aeVec;
+		int obsIdx, aeIdx;
 };
 
 #endif

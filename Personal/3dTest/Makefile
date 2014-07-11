@@ -1,5 +1,5 @@
 CXX = g++
-LIBS = -lSDL2 -lSDL2_image -lSDL2_ttf -lSDL2_mixer -lm -lGL -lGLU -lGLEW 
+LIBS = -lSDL2 -lSDL2_image -lSDL2_ttf -lSDL2_mixer -lm -lGL -lGLU -lGLEW -lstdc++
 CFLAGS = -O1 -std=gnu++11 -MMD -g
 
 #thanks to bobah on SO
