@@ -98,18 +98,7 @@ char Collider::collidesWith(Collider& other){
 	colX = mBB.collidesX(other.mBB);
 	colY = mBB.collidesY(other.mBB);
 	colZ = mBB.collidesZ(other.mBB);
-/*	
-	std::map<Collider *, ColBuf>::iterator mIt;
-	mIt = cBufMap.find(&other);
-	if (mIt == cBufMap.end()){
-		ColBuf cBuf;
-		char c = cBuf.handleCollision(colX, colY, colZ);
-		cBufMap[&other] = cBuf;
-		return c;
-	}
-
-	return mIt->second.handleCollision(colX, colY, colZ);
-*/
+	
 	return cBufMap[&other].handleCollision(colX, colY, colZ);
 }
 
