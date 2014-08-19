@@ -13,6 +13,7 @@ class Player: public ActiveEnt{
 		void update();
 		void getHandleInfo();
 		void move();
+		void handleKey(int k);
 	private:
 		KeyboardHandler * mHandler;
 };

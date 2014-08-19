@@ -60,6 +60,10 @@ void Population::clearAe(){
 	aeIdx=0;
 }
 
+void Population::handleKey(int k){
+	player.handleKey(k);
+}
+
 void Population::move(){
 	std::vector<Obstacle>::iterator obsIt;
 

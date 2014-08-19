@@ -3,15 +3,15 @@
 #include <assert.h>
 
 Player::Player() : ActiveEnt(){
-	mHandler = NULL;
+	mHandler = new KeyboardHandler;
 }
 
 Player::Player(Collider c) : ActiveEnt(c){
-	mHandler = NULL;
+	mHandler = new KeyboardHandler;
 }
 
 Player::~Player(){
-	mHandler = NULL;
+	delete mHandler;
 }
 
 void Player::setKeyHandler(KeyboardHandler * handlePtr){
@@ -26,18 +26,22 @@ void Player::move(){
 	mPos += mCollider.move(mVel);
 }
 
+void Player::handleKey(int k){
+	mHandler->handleKey(k);
+}
+
 void Player::getHandleInfo(){
 	assert(mHandler != NULL);
 
    int dash = mHandler->getKeyState((int)SDLK_SPACE) ? 2 : 1;
-   int speed = mSpeed * dash;
+   int speed = dash * mSpeed;
 
    if (mHandler->getKeyState((int)SDLK_w))
-      mVel.y = -speed;
+      mVel.z = -speed/8;
    else if (mHandler->getKeyState((int)SDLK_s))
-      mVel.y = speed;
+      mVel.z = speed/8;
    else
-      mVel.y = 0;
+      mVel.z = 0;
 
    if (mHandler->getKeyState((int)SDLK_a))
       mVel.x = -speed;

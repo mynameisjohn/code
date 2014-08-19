@@ -4,13 +4,16 @@ TODO
 	-- create library/character libraries
 	-- test some sort of update with more entitities
 	-- AI (potential map)
-	-- 3D motion (figure out perspective projection matrix)
+	-- 3D motion :
+		-> create camera + generate proper viewing volume/walls
+		-> change the move function to move in z rather than y
+		-> redo collision in this way
 **/
 
-#include "JShader.h"
+#include "Level.h"
 #include "BaseFunc.h"
-#include "Population.h"
 
+#include <iostream>
 #include <string>
 
 #include <glm/gtc/type_ptr.hpp>
@@ -20,6 +23,20 @@ Population pop;
 std::vector<Drawable> drawables;
 JShader shader;
 KeyboardHandler handler;
+
+const int SPACE_WIDTH = 400;
+const int SPACE_HEIGHT = 300;
+const int SPACE_DEPTH = 200;
+
+void printMat(glm::mat4 mat){
+	for (int i=0;i<4;i++){
+		std::cout << "[ ";
+		for (int j=0;j<4;j++){
+			std::cout << mat[i][j] << ", ";
+		}
+		std::cout << "]" << std::endl;
+	}
+}
 
 bool initGL(){
 	const std::string vertShaderSrc = "shaders/simpleVert.glsl";
@@ -36,156 +53,22 @@ bool initGL(){
 
    //Set Projection Matrix
    shader.bind();
-   glm::mat4 proj = glm::ortho<GLfloat>(0.0,400.f, 300.f, 0.0, 1.0, -1.0);
-   shader.updateProj(glm::value_ptr(proj));
+   glm::mat4 ortho = glm::ortho<GLfloat>(0.f, 400.f, 300.f, 0.f, 0.f, 100.f);
+	glm::mat4 persp = glm::perspective<GLfloat>(M_PI*.95f, 4.f/3.f, 25.f, 1000.f);
+	persp = glm::scale(glm::vec3(1.f, -1.f, -1.f)) * persp;
 
-	initLevel();
+	shader.updateProj(glm::value_ptr(persp));
+
+	drawables = initLevel(shader, pop);
 
 	glClearColor(0.2f, 0.2f, 0.2f, 1.f);
-
-   return true;
-}
-
-void initPlayer(){
-	Drawable dr;
-	BoundBox bb;
-	Collider c;
-	iRect rect;
-
-	Player * playerPtr = pop.getPlayer();
-	dr = initQuad();
-	bb = BoundBox(0, 0, 0, 40, 40, 40);
-   c.setBB(bb);
-   rect = iRect(0, 0, 40, 20);
-   c.addSub(rect);
-   rect = iRect(0, 20, 40, 20);
-   c.addSub(rect);
-   playerPtr->setCol(c);
-   playerPtr->translate(10, 20, 0);
-   playerPtr->setKeyHandler(&handler);
-   dr.setEntity((Entity *)playerPtr);
-   dr.setColor(0.2f, 0.4f, 0.8f);
-   drawables.push_back(dr);
-
-	return;
-}
-
-void initObstacle(int x, int y){
-	Drawable dr;
-   BoundBox bb;
-   Collider c;
-   iRect rect;
-
-	Obstacle obs;
-
-	dr = initQuad();
-   c = Collider();
-   c.setWalls(0, 0, 0, 400, 300, 300);
-   bb = BoundBox(0, 0, 0, 40, 40, 40);
-   c.setBB(bb);
-   rect = iRect(0, 0, 40, 20);
-   c.addSub(rect);
-   rect = iRect(0, 20, 40, 20);
-   c.addSub(rect);
-   obs.setCol(c);
-   obs.translate(x, y, 0);
-   dr.setEntity(pop.addObs(obs)); //lastObsAsEnt());
-   dr.setColor(0.8f, 0.4f, 0.2f);
-   drawables.push_back(dr);
-
-	return;
-}
-
-void initAe(int x, int y){
-   Drawable dr;
-   BoundBox bb;
-   Collider c;
-   iRect rect;
-
-   ActiveEnt aE;
-
-   dr = initQuad();
-   c = Collider();
-   c.setWalls(0, 0, 0, 400, 300, 300);
-   bb = BoundBox(0, 0, 0, 40, 40, 40);
-   c.setBB(bb);
-   rect = iRect(0, 0, 40, 20);
-   c.addSub(rect);
-   rect = iRect(0, 20, 40, 20);
-   c.addSub(rect);
-   aE.setCol(c);
-   aE.translate(x, y, 0);
-   dr.setEntity(pop.addActiveEnt(aE)); //lastObsAsEnt());
-   dr.setColor(0.4f, 0.8f, 0.2f);
-   drawables.push_back(dr);
-
-   return;
-}
-
-//All of this will be moved to a separate library...in due time
-bool initLevel(){
-	int nObs = 2;
-	int nAe = 1;
-
-	pop.initObs(nObs);
-	pop.initAe(nAe);	
-
-	initPlayer();
 	
-	initObstacle(200, 200);
-	initObstacle(300, 0);
-
-	initAe(100, 100);
-
+	glEnable(GL_DEPTH_TEST);
+	glDepthMask(GL_TRUE);
+	glDepthFunc(GL_LEQUAL);
+	glDepthRange(0.0f, 1.0f);
+   
 	return true;
-}
-
-Drawable initQuad(){
-   const int nVert=4, dim=2, nIndices=4;
-   const int vStride = 4*2*sizeof(GLint);
-   const int tStride = 4*2*sizeof(GLfloat);
-   const int iStride = 4*sizeof(GLuint);
-
-	Drawable dr;
-
-   const GLint vertices[nVert][dim] = {
-      {0, 0}, {40, 0},
-      {0, 40}, {40, 40}
-   };
-   const GLfloat texCoords[nVert][dim] = {
-      {0.f, 0.f}, {1.f, 0.f},
-      {0.f, 1.f}, {1.f, 1.f}
-   };
-   const GLuint indices[4] = {0, 1, 2, 3};
-
-   GLuint tmpVAO;
-   glGenVertexArrays(1, &tmpVAO);
-   glBindVertexArray(tmpVAO);
-
-   GLuint buffers[3];
-   glGenBuffers(3, buffers);
-
-   //vertices
-   glBindBuffer(GL_ARRAY_BUFFER, buffers[0]);
-   glBufferData(GL_ARRAY_BUFFER, vStride, vertices, GL_STATIC_DRAW);
-   glEnableVertexAttribArray(shader.getPosHandle());
-   glVertexAttribPointer(shader.getPosHandle(), dim, GL_INT, 0, 0, 0);
-
-   //tex coords
-   glBindBuffer(GL_ARRAY_BUFFER, buffers[1]);
-   glBufferData(GL_ARRAY_BUFFER, tStride, texCoords, GL_STATIC_DRAW);
-   glEnableVertexAttribArray(shader.getTexCoordHandle());
-   glVertexAttribPointer(shader.getTexCoordHandle(), dim, GL_FLOAT, 0, 0, 0);
-
-   //indices
-   glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, buffers[2] );
-   glBufferData( GL_ELEMENT_ARRAY_BUFFER, iStride, indices, GL_STATIC_DRAW );
-
-   glBindVertexArray(0);
-
-	dr.setVAO(tmpVAO);
-
-   return dr;
 }
 
 void update(){
@@ -203,11 +86,11 @@ void closeShader(){
 //Try and get SDL out of the picture
 void handleEvent(SDL_Event& e){
 	if (e.key.repeat == 0 && (e.type == SDL_KEYUP || e.type == SDL_KEYDOWN))
-      handler.handleKey((int)e.key.keysym.sym);
+      pop.handleKey((int)e.key.keysym.sym);
 }
 
 void render(){
-   glClear(GL_COLOR_BUFFER_BIT);
+   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
    std::vector<Drawable>::iterator drIter;
 	shader.bind();

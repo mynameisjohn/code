@@ -9,6 +9,7 @@ class Entity{
 		Entity(Collider c);
 		void setCol(Collider c);
 		void setBB(BoundBox bb);
+		void translate(glm::vec3 t);
 		void translate(int, int, int);
 		virtual char collidesWith(Entity& e);
 		bool overlapsWith(Entity& e);

@@ -16,6 +16,10 @@ void Entity::setBB(BoundBox bb){
 	mCollider.setBB(bb);
 }
 
+void Entity::translate(glm::vec3 t){
+	this->translate(t.x, t.y, t.z);
+}
+
 void Entity::translate(int tX, int tY, int tZ){
 	mPos.x+=(float) tX;
 	mPos.y+=(float) tY;

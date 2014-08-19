@@ -7,12 +7,12 @@
 //figure out something wrt glm vectors versus a custom class...is it a big deal?
 
 Collider::Collider(){
-	w_x=0;
-	w_y=0;
-	w_z=0;
-	w_X=400;
-	w_Y=300;
-	w_Z=300;
+	w_x=-6000;
+	w_y=-3000;
+	w_z=-700;
+	w_X=6500;
+	w_Y=3000;
+	w_Z=900;
 	cBufMap.clear();
 }
 
@@ -68,14 +68,16 @@ glm::vec3 Collider::move(glm::vec3 vel){
 	else
 		translate.y += vel.y;
 
-	this->translate(translate.x, translate.y, translate.z);
-/*
 	if (mBB.near() + vel.z < w_z)
 		translate.z = (mBB.near() - w_z);
 	else if (mBB.far() + vel.z > w_Z)
 		translate.z = (w_Z - mBB.far());
 	else
 		translate.z += vel.z;
+
+	
+	this->translate(translate.x, translate.y, translate.z);
+/*
 */
 	
 	return translate;

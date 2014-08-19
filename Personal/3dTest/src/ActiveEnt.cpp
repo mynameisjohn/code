@@ -2,7 +2,7 @@
 
 ActiveEnt::ActiveEnt() : Entity(){
 	mVel = glm::vec3();
-	mSpeed = 4;
+	mSpeed = 40; //glm::vec3(40, 40, 4);
 }
 
 ActiveEnt::ActiveEnt(Collider c) : Entity(c){
@@ -28,14 +28,14 @@ void ActiveEnt::moveWRT_ent(Entity& e){
          else if (mVel.y < 0)
             translate(0, toBottom(e), 0);
 			break;
-/*
+
 		case 'z':
 			if (mVel.z > 0)
             translate(0, 0, toNear(e));
          else if (mVel.z < 0)
             translate(0, 0, toFar(e));
 			break;
-*/
+
 		default:
 			break;
 	}	
@@ -56,12 +56,12 @@ void ActiveEnt::moveToEdge(int last, Entity& e){
          else if (mVel.y > 0)
             translate(0, toTop(e), 0);
          break;
-/*
+
 		case 4:
          if (mVel.z > 0)
             translate(0, 0, toNear(e));
          else if (mVel.z < 0)
             translate(0, 0, toFar(e));
          break;
-*/	}
+	}
 }
