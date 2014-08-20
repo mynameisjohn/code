@@ -51,6 +51,7 @@ Drawable initQuad(glm::mat4 MV, JShader& shader){
 
 	dr.setVAO(tmpVAO);
 	dr.setMV(MV);
+	dr.setNElements(nIndices);
 
    return dr;
 }

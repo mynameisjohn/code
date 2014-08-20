@@ -15,11 +15,13 @@ class Drawable{
 		void translate(GLfloat x, GLfloat y, GLfloat z);
 		void leftMultMV(glm::mat4 left);
 		void setEntity(Entity * e);
+		void setNElements(int n);
 		void updateMV();
 		bool isVisible();
 		GLuint getVAO();
 		GLfloat * getMVPtr();
 		GLfloat * getColorPtr();
+		int getNumElems();
 	private:
 		glm::mat4 MV;
 		glm::vec4 mColor; //probably phase this out
@@ -27,6 +29,7 @@ class Drawable{
 		GLuint mVAO;
 		bool visible;
 		Entity * myEntity;
+		int mElementCount;
 };
 
 #endif

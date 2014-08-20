@@ -7,12 +7,12 @@
 //figure out something wrt glm vectors versus a custom class...is it a big deal?
 
 Collider::Collider(){
-	w_x=-6000;
-	w_y=-3000;
-	w_z=-700;
-	w_X=6500;
-	w_Y=3000;
-	w_Z=900;
+	w_x=-4000;
+	w_y=-4000;
+	w_z=-4000;
+	w_X=4000;
+	w_Y=4000;
+	w_Z=400;
 	cBufMap.clear();
 }
 

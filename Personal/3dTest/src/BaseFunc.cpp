@@ -54,7 +54,9 @@ bool initGL(){
    //Set Projection Matrix
    shader.bind();
    glm::mat4 ortho = glm::ortho<GLfloat>(0.f, 400.f, 300.f, 0.f, 0.f, 100.f);
-	glm::mat4 persp = glm::perspective<GLfloat>(M_PI*.95f, 4.f/3.f, 25.f, 1000.f);
+	glm::mat4 persp = glm::perspective<GLfloat>(2.1f, 4.f/3.f, 100.f, 2000.f);
+//glm::frustum<GLfloat>(-2000, 2000, -2000, 2000, 25, 1000);
+//glm::perspective<GLfloat>(M_PI*.95f, 4.f/3.f, 25.f, 1000.f);
 	persp = glm::scale(glm::vec3(1.f, -1.f, -1.f)) * persp;
 
 	shader.updateProj(glm::value_ptr(persp));
@@ -100,7 +102,7 @@ void render(){
          shader.updateMV(drIter->getMVPtr());
          shader.updateColor(drIter->getColorPtr());
          glBindVertexArray(drIter->getVAO());
-         glDrawElements(GL_TRIANGLE_STRIP, 4, GL_UNSIGNED_INT, NULL);
+         glDrawElements(GL_TRIANGLE_STRIP, drIter->getNumElems(), GL_UNSIGNED_INT, NULL);
       }
    }
 	shader.unbind();

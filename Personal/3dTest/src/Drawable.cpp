@@ -9,6 +9,7 @@ Drawable::Drawable(){
 	mPos = glm::vec3();
 	visible = true;
 	myEntity = NULL;
+	mElementCount=4;
 }
 
 Drawable::~Drawable(){
@@ -43,6 +44,10 @@ void Drawable::setEntity(Entity * e){
 	myEntity = e;
 }
 
+void Drawable::setNElements(int n){
+	mElementCount = n;
+}
+
 void Drawable::updateMV(){
 	//printf("Drawable thinks it's %ld\n", (long)myEntity);
 	glm::vec3 translate = myEntity->getPos() - mPos;
@@ -64,4 +69,8 @@ GLfloat * Drawable::getMVPtr(){
 
 GLfloat * Drawable::getColorPtr(){
 	return glm::value_ptr(mColor);
+}
+
+int Drawable::getNumElems(){
+	return mElementCount;
 }

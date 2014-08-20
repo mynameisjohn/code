@@ -10,18 +10,18 @@ std::vector<Drawable> initLevel(JShader& shader, Population& pop){
    pop.initObs(nObs);
    pop.initAe(nAe);
 
-	glm::mat4 MV = glm::translate(glm::vec3(-200, 2000, -300)) *
+	glm::mat4 MV = glm::translate(glm::vec3(-0, 500, -500)) *
                   //glm::rotate((float)(M_PI/2.f), glm::vec3(1, 0, 0)) *
-                  glm::scale(glm::vec3(1000, 1000, 1));
+                  glm::scale(glm::vec3(400, 400, 1));
 
    drawables.push_back(initPlayer(MV, shader, pop));
 
    drawables.push_back(initObstacle(glm::vec3(0, 2000, 3300), shader, pop));
    drawables.push_back(initObstacle(glm::vec3(300, 40, 0), shader, pop));
 	
-	MV = glm::translate(glm::vec3(-2500, 2000, -450)) * 
+	MV = glm::translate(glm::vec3(-1000, 500, -590)) * 
 						glm::rotate((float)(M_PI/2.f), glm::vec3(1, 0, 0)) * 
-						glm::scale(glm::vec3(10000, 600, 1));
+						glm::scale(glm::vec3(4000, 600, 1));
 
    drawables.push_back(initAe(MV, shader, pop));
 
@@ -38,7 +38,7 @@ Drawable initPlayer(glm::mat4 MV, JShader& shader, Population& pop){
 
 	Player * playerPtr = pop.getPlayer();
 	dr = initQuad(MV, shader);
-	bb = BoundBox(0, 0, 0, 1000, 1000, 1000);
+	bb = BoundBox(0, 0, 0, 100, 100, 100);
    c.setBB(bb);
    rect = iRect(0, 0, 40, 20);
    c.addSub(rect);
