@@ -14,8 +14,9 @@ class ActiveEnt: public Entity{
 		virtual void move(){};
 		void moveToEdge(int, Entity&);
 	protected:
-		glm::vec3 mVel;
-		int mSpeed;
+		vec3 mVel;
+		vec3 mSpeed;
+		bool grounded;
 };
 
 #endif

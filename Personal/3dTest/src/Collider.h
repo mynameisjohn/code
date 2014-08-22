@@ -1,12 +1,6 @@
 #ifndef COLLIDER_H
 #define COLLIDER_H
 
-#ifndef GLM_FORCE_RADIANS 
-#define GLM_FORCE_RADIANS 
-#endif 
- 
-#include <glm/glm.hpp> 
-
 #include <vector>
 #include <map>
 #include "BoundBox.h"
@@ -19,10 +13,10 @@ class Collider{
 		~Collider();
 		void setBB(BoundBox);
 		void addSub(iRect sub);
-		void setWalls(int, int, int, int, int, int);
+		void setWalls(vec3 min, vec3 max);
 		void clearSub();
-		void translate(int, int, int);
-		glm::vec3 move(glm::vec3 vel);
+		void translate(vec3 trans);
+		bool move(vec3 vel);
 		bool collidesX(Collider&);
       bool collidesY(Collider&);
 		bool collidesZ(Collider&);
@@ -31,9 +25,12 @@ class Collider{
 	private:
 		BoundBox mBB;
 		std::vector<iRect> mSubs;
-		int w_x, w_y, w_z, w_X, w_Y, w_Z;
+		vec3 W_min, W_max;
 		std::map<Collider *, ColBuf> cBufMap;
 	public:
+		inline vec3 getPos(){
+			return mBB.getPos();
+		}
 		inline int toLeft(Collider& c){
 			return c.mBB.left()-mBB.right(); 
 		}

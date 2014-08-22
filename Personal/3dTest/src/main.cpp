@@ -1,8 +1,9 @@
 #include <GL/glew.h>
 #include <GL/gl.h>
+#include <SDL2/SDL_thread.h>
 #include "BaseFunc.h"
 
-#define SCREEN_WIDTH 640
+#define SCREEN_WIDTH 720
 #define SCREEN_HEIGHT 480
 
 
@@ -19,9 +20,10 @@ int main(int argc, char ** argv){
       return EXIT_FAILURE;
    }
 
-	//polling boolean
+	//polling boolean, key event, sub thread
 	bool quit = false;
 	SDL_Event e;
+	SDL_Thread * subThread = NULL;
 
 	//main event loop
 	while (!quit){
@@ -31,8 +33,10 @@ int main(int argc, char ** argv){
 			handleEvent(e);
 		}
 		move();
-		update();
+		update(NULL);
+		///SDL_CreateThread(update, "Update Thread", NULL);
 		render();
+		//SDL_WaitThread(subThread, NULL);
 		SDL_GL_SwapWindow(gWindow);
 	}
 	close();

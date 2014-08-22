@@ -9,13 +9,12 @@ class Player: public ActiveEnt{
 		Player();
 		Player(Collider c);
 		~Player();
-		void setKeyHandler(KeyboardHandler *);
 		void update();
 		void getHandleInfo();
-		void move();
 		void handleKey(int k);
 	private:
-		KeyboardHandler * mHandler;
+		KeyboardHandler mHandler;
+		float mDash;
 };
 
 #endif

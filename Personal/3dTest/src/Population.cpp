@@ -22,10 +22,6 @@ void Population::setPlayer(Player p){
 	player = p;
 }
 
-void Population::setKeyHandler(KeyboardHandler * handlePtr){
-	player.setKeyHandler(handlePtr);
-}
-
 Entity * Population::addObs(Obstacle obs){
 	if (obsIdx>=obsVec.size()){
 		printf("Too many obstacles added\n");
@@ -71,7 +67,6 @@ void Population::move(){
 	player.moveWRT_walls();
 	for (obsIt=obsVec.begin(); obsIt!=obsVec.end(); obsIt++){
 		player.moveWRT_ent(*obsIt);
-		//player.moveWRT_ent(obsVec[0]);
 	}
 }
 

@@ -9,15 +9,17 @@ class Entity{
 		Entity(Collider c);
 		void setCol(Collider c);
 		void setBB(BoundBox bb);
-		void translate(glm::vec3 t);
-		void translate(int, int, int);
 		virtual char collidesWith(Entity& e);
 		bool overlapsWith(Entity& e);
-		glm::vec3 getPos();
 	protected:
 		Collider mCollider;
-		glm::vec3 mPos;
 	public:
+		inline void translate(vec3 trans){
+			mCollider.translate(trans);
+		}
+		inline vec3 getPos(){
+			return mCollider.getPos();
+		}
 		inline int toLeft(Entity& e){
 			return mCollider.toLeft(e.mCollider);
 		}

@@ -7,7 +7,7 @@ bool initLevel();
 
 Drawable initQuad();
 
-void update();
+int update(void * data);
 
 void move();
 

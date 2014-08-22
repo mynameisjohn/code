@@ -9,7 +9,6 @@ class Population{
 		Population();
 		~Population();
 		void setPlayer(Player p);
-		void setKeyHandler(KeyboardHandler *);
 		void handleKey(int k);
 		void clearObs();
 		void clearAe();

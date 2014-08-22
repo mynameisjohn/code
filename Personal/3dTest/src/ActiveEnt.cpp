@@ -1,8 +1,8 @@
 #include "ActiveEnt.h"
 
 ActiveEnt::ActiveEnt() : Entity(){
-	mVel = glm::vec3();
-	mSpeed = 40; //glm::vec3(40, 40, 4);
+	mVel = vec3();
+	mSpeed = vec3(40.f, -40.f, 8.f);
 }
 
 ActiveEnt::ActiveEnt(Collider c) : Entity(c){
@@ -10,7 +10,7 @@ ActiveEnt::ActiveEnt(Collider c) : Entity(c){
 }
 
 void ActiveEnt::moveWRT_walls(){
-	mPos += mCollider.move(mVel);
+	grounded = mCollider.move(mVel);
 }
 
 void ActiveEnt::moveWRT_ent(Entity& e){
@@ -18,29 +18,31 @@ void ActiveEnt::moveWRT_ent(Entity& e){
 	switch (last){
 		case 'x':
 			if (mVel.x > 0)
-            translate(toLeft(e), 0, 0);
+            translate(vec3(toLeft(e), 0, 0));
          else if (mVel.x < 0)
-            translate(toRight(e), 0, 0);
+            translate(vec3(toRight(e), 0, 0));
 			break;
 		case 'y':
-			if (mVel.y > 0)
-            translate(0,toTop(e), 0);
+			if (mVel.y > 0){
+            translate(vec3(0,toTop(e), 0));
+				grounded = true;
+			}
          else if (mVel.y < 0)
-            translate(0, toBottom(e), 0);
+            translate(vec3(0, toBottom(e), 0));
 			break;
 
 		case 'z':
 			if (mVel.z > 0)
-            translate(0, 0, toNear(e));
+            translate(vec3(0, 0, toNear(e)));
          else if (mVel.z < 0)
-            translate(0, 0, toFar(e));
+            translate(vec3(0, 0, toFar(e)));
 			break;
 
 		default:
 			break;
 	}	
 }
-
+/*
 void ActiveEnt::moveToEdge(int last, Entity& e){
 	switch (last){
 		case 1:
@@ -65,3 +67,4 @@ void ActiveEnt::moveToEdge(int last, Entity& e){
          break;
 	}
 }
+*/

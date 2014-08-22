@@ -1,18 +1,10 @@
 #include "Collider.h"
-#include <glm/glm.hpp>
 
 #include <stdio.h>
 
-//TODO
-//figure out something wrt glm vectors versus a custom class...is it a big deal?
-
 Collider::Collider(){
-	w_x=-4000;
-	w_y=-4000;
-	w_z=-4000;
-	w_X=4000;
-	w_Y=4000;
-	w_Z=400;
+	W_min=vec3(-1000, -1000, -1200);
+	W_max=vec3(1000, 600, -430);
 	cBufMap.clear();
 }
 
@@ -28,59 +20,55 @@ void Collider::addSub(iRect sub){
 	mSubs.push_back(sub);
 }
 
-void Collider::setWalls(int x, int y, int z, int X, int Y, int Z){
-	w_x=x;
-	w_y=y;
-	w_z=z;
-	w_X=X;
-	w_Y=Y;
-	w_Z=Z;
+void Collider::setWalls(vec3 min, vec3 max){
+	W_min=min;
+	W_max=max;
 }
 
 void Collider::clearSub(){
 	mSubs.clear();
 }
 
-void Collider::translate(int x, int y, int z){
-	mBB.translate(x,y,z);
+void Collider::translate(vec3 trans){
+	mBB.translate(trans);
 	
 	std::vector<iRect>::iterator rectIt;
 	for (rectIt=mSubs.begin(); rectIt!=mSubs.end(); rectIt++)
-		rectIt->translate(x,y);
+		rectIt->translate(trans.x,trans.y);
 }
 
 //This just moves the collider with respect to the walls
-glm::vec3 Collider::move(glm::vec3 vel){
-	glm::vec3 translate;
+bool Collider::move(vec3 vel){
+	bool grounded = false;//eventually make bools more useful
+	vec3 T;
 
 	//check wall collision, move accordingly in each dimension
-	if (mBB.left() + vel.x < w_x)
-		translate.x = (mBB.left() - w_x);
-	else if (mBB.right() + vel.x > w_X)
-		translate.x = (w_X - mBB.right());
+	if (mBB.left() + vel.x < W_min.x)
+		T.x = W_min.x-mBB.left();//These somehow got reversed...be careful	
+	else if (mBB.right() + vel.x > W_max.x)
+		T.x = (W_max.x - mBB.right());
 	else
-		translate.x += vel.x;
+		T.x += vel.x;
 
-	if (mBB.top() + vel.y < w_y)
-		translate.y = (mBB.top() - w_y);
-	else if (mBB.bottom() + vel.y > w_Y)
-		translate.y = (w_Y - mBB.bottom());
+	if (mBB.top() + vel.y < W_min.y)
+		T.y = (mBB.top() - W_min.y);
+	else if (mBB.bottom() + vel.y > W_max.y){
+		T.y = (W_max.y - mBB.bottom());
+		grounded = true;
+	}
 	else
-		translate.y += vel.y;
+		T.y += vel.y;
 
-	if (mBB.near() + vel.z < w_z)
-		translate.z = (mBB.near() - w_z);
-	else if (mBB.far() + vel.z > w_Z)
-		translate.z = (w_Z - mBB.far());
+	if (mBB.near() + vel.z < W_min.z)
+		T.z = W_min.z-mBB.near();
+	else if (mBB.far() + vel.z > W_max.z)
+		T.z = (W_max.z - mBB.far());
 	else
-		translate.z += vel.z;
+		T.z += vel.z;
 
-	
-	this->translate(translate.x, translate.y, translate.z);
-/*
-*/
-	
-	return translate;
+	translate(T);
+
+	return grounded;
 }
 
 //This whole thing should be inlined or something

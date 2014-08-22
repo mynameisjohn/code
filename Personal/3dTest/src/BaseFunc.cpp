@@ -53,7 +53,7 @@ bool initGL(){
 
    //Set Projection Matrix
    shader.bind();
-   glm::mat4 ortho = glm::ortho<GLfloat>(0.f, 400.f, 300.f, 0.f, 0.f, 100.f);
+   glm::mat4 ortho = glm::ortho<GLfloat>(-2000.f, 2000.f, 2000.f, 0.f, 10.f, 1000.f);
 	glm::mat4 persp = glm::perspective<GLfloat>(2.1f, 4.f/3.f, 100.f, 2000.f);
 //glm::frustum<GLfloat>(-2000, 2000, -2000, 2000, 25, 1000);
 //glm::perspective<GLfloat>(M_PI*.95f, 4.f/3.f, 25.f, 1000.f);
@@ -68,13 +68,15 @@ bool initGL(){
 	glEnable(GL_DEPTH_TEST);
 	glDepthMask(GL_TRUE);
 	glDepthFunc(GL_LEQUAL);
-	glDepthRange(0.0f, 1.0f);
-   
+	glDepthRange(1.f, 0.f); //why invert dis?	
+
 	return true;
 }
 
-void update(){
+int update(void * data){
 	pop.update();
+
+	return 1;
 }
 
 void move(){

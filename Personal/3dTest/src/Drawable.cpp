@@ -42,6 +42,7 @@ void Drawable::leftMultMV(glm::mat4 left){
 
 void Drawable::setEntity(Entity * e){
 	myEntity = e;
+	mPos=e->getPos();
 }
 
 void Drawable::setNElements(int n){
@@ -49,10 +50,10 @@ void Drawable::setNElements(int n){
 }
 
 void Drawable::updateMV(){
-	//printf("Drawable thinks it's %ld\n", (long)myEntity);
-	glm::vec3 translate = myEntity->getPos() - mPos;
+	vec3 translate = myEntity->getPos() - mPos;
 	leftMultMV(glm::translate(translate));
 	mPos += translate;
+	//printf("%lf\n", mPos.x);
 }
 
 bool Drawable::isVisible(){

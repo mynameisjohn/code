@@ -2,7 +2,7 @@
 #define KEYBOARDHANDLER_H
 
 #include <stdio.h>
-#include <SDL2/SDL.h>
+//#include <SDL2/SDL.h>
 
 class KeyboardHandler{
 public:
@@ -12,17 +12,17 @@ public:
 	}
 
 	inline int getKeyState(int key){
-		if (key>0 && key<255)
-			return keyState[key];
+		return keyState[key & 0xFF];
 	}
 
 	//just toggles for now	
 	inline void handleKey(int key){
-		if (key>0 && key<255)
-			keyState[key] = !keyState[key];
+		//if (key>0 && key<255)
+		key &= 0xFF;
+		keyState[key] = !keyState[key];
 	}
 
-private:
+protected:
 	bool keyState[256];
 };
 

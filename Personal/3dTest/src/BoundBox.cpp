@@ -1,16 +1,15 @@
 #include "BoundBox.h"
+#include <stdio.h>
 
 BoundBox::BoundBox()
-: iCube(){}
+: glmBox(){}
 
-BoundBox::BoundBox(int W, int H, int D)
-:iCube(W, H, D){}
+BoundBox::BoundBox(vec3 dim)
+:glmBox(dim){}
 
-BoundBox::BoundBox(int X, int Y, int Z, int W, int H, int D)
-: iCube(X, Y, Z, W, H, D){}
+BoundBox::BoundBox(vec3 pos, vec3 dim)
+: glmBox(pos, dim){}
 
-void BoundBox::translate(int x, int y, int z){
-	this->x+=x;
-	this->y+=y;
-	this->z+=z;
+void BoundBox::translate(vec3 trans){
+	mPos += trans;
 }
