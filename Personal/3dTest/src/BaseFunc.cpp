@@ -45,8 +45,11 @@ bool initGL(){
 	
 	glEnable(GL_DEPTH_TEST);
 	glDepthMask(GL_TRUE);
-	glDepthFunc(GL_LEQUAL);
+	glDepthFunc(GL_LESS);
 	glDepthRange(1.f, 0.f); //why invert dis?	
+	glEnable(GL_CULL_FACE);
+   glEnable(GL_MULTISAMPLE);
+	glCullFace(GL_FRONT);
 
 	return true;
 }
@@ -59,8 +62,8 @@ int update(void * data){
 
 void move(){
 	vec3 pCenter = pop.move();
-	printf("%lf\t%lf\t%lf\n",pCenter.x, pCenter.y, pCenter.z);
-	//cam.push(pCenter);
+	//printf("%lf\t%lf\t%lf\n",pCenter.x, pCenter.y, pCenter.z);
+	cam.push(pCenter);
 }
 
 void closeShader(){
@@ -69,8 +72,17 @@ void closeShader(){
 
 //Try and get SDL out of the picture
 void handleEvent(SDL_Event& e){
-	if (e.key.repeat == 0 && (e.type == SDL_KEYUP || e.type == SDL_KEYDOWN))
-      pop.handleKey((int)e.key.keysym.sym);
+	if (e.key.repeat == 0 && (e.type == SDL_KEYUP || e.type == SDL_KEYDOWN)){
+      pop.handleKey(keyCode(e));
+	}
+	if (keyCode(e) == SDLK_RIGHT)
+		cam.rightMult(glm::translate(vec3(-10, 0, 0)));
+	if (keyCode(e) == SDLK_LEFT)
+		cam.rightMult(glm::translate(vec3(10, 0, 0)));
+	if (keyCode(e) == SDLK_UP)
+		cam.rightMult(glm::rotate(0.01f, vec3(1, 0, 0)));
+	if (keyCode(e) == SDLK_DOWN)
+		cam.rightMult(glm::rotate(-0.01f, vec3(1, 0, 0)));
 }
 
 void render(){
@@ -89,4 +101,8 @@ void render(){
       }
    }
 	shader.unbind();
+}
+
+int keyCode(SDL_Event& e){
+   return (int)e.key.keysym.sym;
 }

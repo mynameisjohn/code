@@ -8,6 +8,9 @@ std::ostream& operator<<(std::ostream& os, const glm::vec3& vec)
   return os;
 }
 */
+
+int keyCode(SDL_Event& e);
+
 bool initGL();
 
 bool initLevel();

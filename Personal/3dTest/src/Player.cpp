@@ -30,7 +30,7 @@ void Player::getHandleInfo(){
 // uncomment to prohibit mid-air movement
 //	if (grounded){
 	float dashSpeed = mSpeed.x*(mHandler.getKeyState(SDLK_LSHIFT) ? mDash : 1.f);
-   bool jump = mHandler.getKeyState(SDLK_SPACE);
+	bool jump = mHandler.getKeyState(SDLK_SPACE);
 
 	mVel.x=0;
 	if (mHandler.getKeyState(SDLK_a))
@@ -45,5 +45,5 @@ void Player::getHandleInfo(){
 		mVel.z -= mSpeed.z;
 	if (mHandler.getKeyState(SDLK_s))
 		mVel.z += mSpeed.z;
-//}
+//	}
 }

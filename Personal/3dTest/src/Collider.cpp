@@ -3,8 +3,8 @@
 #include <stdio.h>
 
 Collider::Collider(){
-	W_min=vec3(-1000, -1000, -200);
-	W_max=vec3(1000, 200, -2000);
+	W_min=vec3(-1000, -1000, -2200);
+	W_max=vec3(7000, 600, -3600);
 	cBufMap.clear();
 }
 

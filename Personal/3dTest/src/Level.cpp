@@ -11,21 +11,26 @@ std::vector<Drawable> initLevel(JShader& shader, Population& pop){
    pop.initObs(nObs);
    pop.initAe(nAe);
 	
-	MV = glm::translate(vec3(0, -999, -1000)) *
-		  glm::scale(vec3(400, 400, 400));
+	MV = glm::translate(vec3(0, -999, -3500)) *
+		  glm::scale(vec3(400, 400, -400));
    drawables.push_back(initPlayer(MV, shader, pop));
 
-	MV = glm::translate(vec3(-500, 200, -500)) *
-		  glm::scale(vec3(400, 400, 1));
+	MV = glm::translate(vec3(1500, 200, -2500)) *
+		  glm::scale(vec3(400, 400, -400));
 	drawables.push_back(initObstacle(MV,shader,pop));
  
-	MV = glm::translate(vec3(500, 200, -500)) *
-		  glm::scale(vec3(400, 400, 1));
+	MV = glm::translate(vec3(500, 200, -2500)) *
+		  glm::scale(vec3(400, 400, -400));
    drawables.push_back(initObstacle(MV, shader, pop));
-
-	MV = glm::translate(glm::vec3(-1000, 600, -1200)) * 
+	
+	//bug with back wall...
+	MV = glm::translate(glm::vec3(-1000, 600, -4000)) * 
 		  glm::rotate((float)(M_PI/2.f), glm::vec3(1, 0, 0)) * 
-		  glm::scale(glm::vec3(2000, 770, 1));
+		  glm::scale(glm::vec3(8000, 2500, 1));
+   drawables.push_back(initAe(MV, shader, pop));
+	
+	MV = glm::translate(glm::vec3(-1000, -1900, -4000)) * 
+		  glm::scale(glm::vec3(8000, 2500, 1));
    drawables.push_back(initAe(MV, shader, pop));
 	
 	return drawables;
@@ -41,7 +46,7 @@ Drawable initPlayer(glm::mat4 MV, JShader& shader, Population& pop){
 
 	Player * playerPtr = pop.getPlayer();
 	dr = initCube(MV, shader);
-	bb = BoundBox(translate, vec3(400, 400, 2));
+	bb = BoundBox(translate, vec3(400, 400, 400));
    c.setBB(bb);
    rect = iRect(0, 0, 40, 20);
    c.addSub(rect);
@@ -64,9 +69,9 @@ Drawable initObstacle(glm::mat4 MV, JShader& shader, Population& pop){
 
 	vec3 translate = vec3(MV * glm::vec4(0, 0, 0, 1));
 
-	dr = initQuad(MV, shader);
+	dr = initCube(MV, shader);
    c = Collider();
-	bb = BoundBox(vec3(), vec3(400, 400, 1));
+	bb = BoundBox(vec3(), vec3(400, 400, 400));
    c.setBB(bb);
    rect = iRect(0, 0, 40, 20);
    c.addSub(rect);
