@@ -60,7 +60,7 @@ void Population::handleKey(int k){
 	player.handleKey(k);
 }
 
-void Population::move(){
+vec3 Population::move(){
 	std::vector<Obstacle>::iterator obsIt;
 
 	//move with respect to (WRT) walls and obstacles	
@@ -68,6 +68,8 @@ void Population::move(){
 	for (obsIt=obsVec.begin(); obsIt!=obsVec.end(); obsIt++){
 		player.moveWRT_ent(*obsIt);
 	}
+
+	return player.center();
 }
 
 void Population::update(){

@@ -6,6 +6,7 @@
 #endif
 
 #include <glm/glm.hpp>
+#include <iostream>
 
 using glm::vec3;
 
@@ -49,6 +50,9 @@ public:
 
 	inline vec3 getDim(){
 		return mDim;
+	}
+	inline vec3 center(){
+		return mPos + mDim/2.f;
 	}
 };
 

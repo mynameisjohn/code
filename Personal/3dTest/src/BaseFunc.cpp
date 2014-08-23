@@ -12,6 +12,7 @@ TODO
 
 #include "Level.h"
 #include "BaseFunc.h"
+#include "Camera.h"
 
 #include <iostream>
 #include <string>
@@ -23,20 +24,7 @@ Population pop;
 std::vector<Drawable> drawables;
 JShader shader;
 KeyboardHandler handler;
-
-const int SPACE_WIDTH = 400;
-const int SPACE_HEIGHT = 300;
-const int SPACE_DEPTH = 200;
-
-void printMat(glm::mat4 mat){
-	for (int i=0;i<4;i++){
-		std::cout << "[ ";
-		for (int j=0;j<4;j++){
-			std::cout << mat[i][j] << ", ";
-		}
-		std::cout << "]" << std::endl;
-	}
-}
+Camera cam;
 
 bool initGL(){
 	const std::string vertShaderSrc = "shaders/simpleVert.glsl";
@@ -50,17 +38,7 @@ bool initGL(){
    //Generate Shader Program
    if (!shader.loadProgram())
       return false;
-
-   //Set Projection Matrix
-   shader.bind();
-   glm::mat4 ortho = glm::ortho<GLfloat>(-2000.f, 2000.f, 2000.f, 0.f, 10.f, 1000.f);
-	glm::mat4 persp = glm::perspective<GLfloat>(2.1f, 4.f/3.f, 100.f, 2000.f);
-//glm::frustum<GLfloat>(-2000, 2000, -2000, 2000, 25, 1000);
-//glm::perspective<GLfloat>(M_PI*.95f, 4.f/3.f, 25.f, 1000.f);
-	persp = glm::scale(glm::vec3(1.f, -1.f, -1.f)) * persp;
-
-	shader.updateProj(glm::value_ptr(persp));
-
+	
 	drawables = initLevel(shader, pop);
 
 	glClearColor(0.2f, 0.2f, 0.2f, 1.f);
@@ -80,7 +58,9 @@ int update(void * data){
 }
 
 void move(){
-	pop.move();
+	vec3 pCenter = pop.move();
+	printf("%lf\t%lf\t%lf\n",pCenter.x, pCenter.y, pCenter.z);
+	//cam.push(pCenter);
 }
 
 void closeShader(){
@@ -101,7 +81,8 @@ void render(){
    for (drIter = drawables.begin(); drIter != drawables.end(); drIter++){
       drIter->updateMV();
       if (drIter->isVisible()){
-         shader.updateMV(drIter->getMVPtr());
+			mat4 MVP = cam.getProjMat() * drIter->getMVMat();
+	      shader.updateMVP(glm::value_ptr(MVP));
          shader.updateColor(drIter->getColorPtr());
          glBindVertexArray(drIter->getVAO());
          glDrawElements(GL_TRIANGLE_STRIP, drIter->getNumElems(), GL_UNSIGNED_INT, NULL);

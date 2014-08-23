@@ -1,7 +1,8 @@
 #include "JShader.h"
+//#include <glm/gtx/transform.hpp>
 
 JShader::JShader(){
-	mMVHandle = -1;
+	mMVPHandle = -1;
 	mColorHandle = -1;
 	mPosHandle = -1;
 	mVS = 0;
@@ -40,14 +41,14 @@ bool JShader::loadProgram(){
 	mColorHandle = glGetUniformLocation(mProgramID, "fColor");
 	if (mColorHandle == -1)
 		printf("%s is not a valid shader program variable.\n","fColor");
-
+/*
 	mProjHandle = glGetUniformLocation(mProgramID, "projMat");
    if (mProjHandle == -1)
       printf("%s is not a valid shader program variable.\n","projMat");
-
-	mMVHandle = glGetUniformLocation(mProgramID, "MVMat");
-   if (mMVHandle == -1)
-      printf("%s is not a valid shader program variable.\n","MVMat");
+*/
+	mMVPHandle = glGetUniformLocation(mProgramID, "MVPMat");
+   if (mMVPHandle == -1)
+      printf("%s is not a valid shader program variable.\n","MVPMat");
 
 	int DIM = 100;
 	int th = 8;
@@ -118,11 +119,17 @@ bool JShader::loadFrag(std::string fragStr){
 void JShader::updateColor(GLfloat * color){
 	glUniform4f(mColorHandle, color[0], color[1], color[2], color[3]);
 }
-
+/*
 void JShader::updateProj(GLfloat * proj){
    glUniformMatrix4fv(mProjHandle, 1, GL_FALSE, proj);
 }
-
+*/
+//Maybe do this by reference? Idk
+void JShader::updateMVP(GLfloat * MVP){
+	glUniformMatrix4fv(mMVPHandle, 1, GL_FALSE, MVP);
+}
+/*
 void JShader::updateMV(GLfloat * MV){
 	glUniformMatrix4fv(mMVHandle, 1, GL_FALSE, MV);
 }
+*/

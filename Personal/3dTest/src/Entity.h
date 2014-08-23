@@ -38,6 +38,9 @@ class Entity{
 		inline int toFar(Entity& e){
          return mCollider.toFar(e.mCollider);
       }
+		inline vec3 center(){
+			return mCollider.center();
+		}
 };
 
 

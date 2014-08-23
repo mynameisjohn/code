@@ -49,6 +49,9 @@ class Collider{
 		inline int toFar(Collider& c){
          return c.mBB.near()-mBB.far(); 
       }
+		inline vec3 center(){
+			return mBB.center();
+		}
 };
 
 #endif

@@ -75,3 +75,7 @@ GLfloat * Drawable::getColorPtr(){
 int Drawable::getNumElems(){
 	return mElementCount;
 }
+
+glm::mat4 Drawable::getMVMat(){
+	return MV;
+}

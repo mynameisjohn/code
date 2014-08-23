@@ -2,7 +2,7 @@
 
 ActiveEnt::ActiveEnt() : Entity(){
 	mVel = vec3();
-	mSpeed = vec3(40.f, -40.f, 8.f);
+	mSpeed = vec3(40.f, -40.f, 20.12241f);
 }
 
 ActiveEnt::ActiveEnt(Collider c) : Entity(c){

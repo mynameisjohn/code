@@ -22,6 +22,7 @@ class Drawable{
 		GLfloat * getMVPtr();
 		GLfloat * getColorPtr();
 		int getNumElems();
+		glm::mat4 getMVMat();
 	private:
 		glm::mat4 MV;
 		glm::vec4 mColor; //probably phase this out

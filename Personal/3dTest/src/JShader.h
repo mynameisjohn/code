@@ -12,16 +12,17 @@ class JShader : public ShaderProgram{
 		GLint getPosHandle();              //get vertex position handle
 		GLuint getTexCoordHandle();
 		GLuint getTexHandle();
-		void updateProj(GLfloat * proj);   //update proj, send to GPU
-		void updateMV(GLfloat * MV);       //update MV, send to GPU
+		//void updateProj(GLfloat * proj);   //update proj, send to GPU
+		//void updateMV(GLfloat * MV);       //update MV, send to GPU
+		void updateMVP(GLfloat * MVP);
 		void updateColor(GLfloat * color); //update color, send to GPU
 		void updateSampler();
 	private:
 		GLuint mTexCoordHandle; //Handle to Texture Coordinates
 		GLuint mTexHandle;      //Handle to texture sampler
 		GLuint texture;         //Handle to texture
-		GLint mMVHandle;   //Handle to MV matrix
-		GLint mProjHandle; //Handle to Projection Matrix
+		GLint mMVPHandle;   //Handle to MVP matrix
+		//GLint mProjHandle; //Handle to Projection Matrix
 		GLint mColorHandle;//Handle to Frag Color (needed?)
 		GLint mPosHandle;  //Handle to Vertex Position
 		GLuint mVS, mFS;   //References to vertex and fragment shaders

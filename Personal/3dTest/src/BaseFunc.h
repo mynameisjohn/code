@@ -1,6 +1,13 @@
 #include "Drawable.h"
 #include <SDL2/SDL.h>
-
+#include <iostream>
+/*
+std::ostream& operator<<(std::ostream& os, const glm::vec3& vec)
+{
+  std::cout << "<" << vec.x << ", " << vec.y << ", " << vec.z << ">";
+  return os;
+}
+*/
 bool initGL();
 
 bool initLevel();

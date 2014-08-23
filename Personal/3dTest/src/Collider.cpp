@@ -3,8 +3,8 @@
 #include <stdio.h>
 
 Collider::Collider(){
-	W_min=vec3(-1000, -1000, -1200);
-	W_max=vec3(1000, 600, -430);
+	W_min=vec3(-1000, -1000, -200);
+	W_max=vec3(1000, 200, -2000);
 	cBufMap.clear();
 }
 
@@ -59,13 +59,14 @@ bool Collider::move(vec3 vel){
 	else
 		T.y += vel.y;
 
-	if (mBB.near() + vel.z < W_min.z)
+	//These have been acting up...	
+	if (mBB.near() + vel.z > W_min.z)
 		T.z = W_min.z-mBB.near();
-	else if (mBB.far() + vel.z > W_max.z)
+	else if (mBB.far() + vel.z < W_max.z)
 		T.z = (W_max.z - mBB.far());
 	else
 		T.z += vel.z;
-
+	
 	translate(T);
 
 	return grounded;

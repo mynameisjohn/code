@@ -11,8 +11,7 @@ std::vector<Drawable> initLevel(JShader& shader, Population& pop){
    pop.initObs(nObs);
    pop.initAe(nAe);
 	
-	MV = glm::translate(vec3(0, -999, -500)) *
-		  glm::rotate((float)(M_PI/6.f), glm::vec3(0, 1, 0)) * 
+	MV = glm::translate(vec3(0, -999, -1000)) *
 		  glm::scale(vec3(400, 400, 400));
    drawables.push_back(initPlayer(MV, shader, pop));
 

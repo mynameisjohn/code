@@ -13,7 +13,7 @@ class Population{
 		void clearObs();
 		void clearAe();
 		void update();
-		void move();
+		vec3 move();
 		void initObs(int);
 		void initAe(int);
 		Player * getPlayer();
@@ -24,6 +24,10 @@ class Population{
 		std::vector<Obstacle> obsVec;
 		std::vector<ActiveEnt> aeVec;
 		int obsIdx, aeIdx;
+	public:
+		inline vec3 getPlayerCenter(){
+			return player.center();
+		}
 };
 
 #endif
