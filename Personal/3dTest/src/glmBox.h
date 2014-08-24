@@ -9,15 +9,32 @@
 #include <iostream>
 
 using glm::vec3;
-
+/*
+std::ostream& operator<<(std::ostream& os, const glm::vec3& vec)
+{
+  std::cout << "<" << vec.x << ", " << vec.y << ", " << vec.z << ">";
+  return os;
+}
+*/
 class glmBox{
 	public:
 		glmBox();
 		glmBox(vec3 dim);
 		glmBox(vec3 pos, vec3 dim);
+		float left();
+		float right();
+		float bottom();
+		float top();
+		float near();
+		float far();
+		vec3 getPos();
+		vec3 getDim();
+		vec3 center();
 	protected:
 		vec3 mPos;
 		vec3 mDim;
+/*
+	I'll re-inline these when the time comes
 //inline functions 
 public: 
    inline float left(){ 
@@ -54,6 +71,7 @@ public:
 	inline vec3 center(){
 		return mPos + mDim/2.f;
 	}
+*/
 };
 
 #endif

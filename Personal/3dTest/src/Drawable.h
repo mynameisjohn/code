@@ -11,7 +11,8 @@ class Drawable{
 		void setMV(glm::mat4 newMatrix);
 		void identity();
 		void setColor(float r, float g, float b);
-		void setVAO(GLuint  VAO);
+		void setVAO(GLuint VAO);
+		void setTex(GLuint tex);
 		void translate(GLfloat x, GLfloat y, GLfloat z);
 		void leftMultMV(glm::mat4 left);
 		void setEntity(Entity * e);
@@ -19,6 +20,7 @@ class Drawable{
 		void updateMV();
 		bool isVisible();
 		GLuint getVAO();
+		GLuint getTex();
 		GLfloat * getMVPtr();
 		GLfloat * getColorPtr();
 		int getNumElems();
@@ -27,7 +29,7 @@ class Drawable{
 		glm::mat4 MV;
 		glm::vec4 mColor; //probably phase this out
 		glm::vec3 mPos;
-		GLuint mVAO;
+		GLuint mVAO, mTex;
 		bool visible;
 		Entity * myEntity;
 		int mElementCount;

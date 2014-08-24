@@ -10,11 +10,12 @@ std::vector<Drawable> initLevel(JShader& shader, Population& pop){
 
    pop.initObs(nObs);
    pop.initAe(nAe);
-	
-	MV = glm::translate(vec3(0, -999, -3500)) *
+
+	//Note the negative Z scale...never got around that	
+	MV = glm::translate(vec3(0, 999, 3500)) *
 		  glm::scale(vec3(400, 400, -400));
    drawables.push_back(initPlayer(MV, shader, pop));
-
+/*
 	MV = glm::translate(vec3(1500, 200, -2500)) *
 		  glm::scale(vec3(400, 400, -400));
 	drawables.push_back(initObstacle(MV,shader,pop));
@@ -22,14 +23,14 @@ std::vector<Drawable> initLevel(JShader& shader, Population& pop){
 	MV = glm::translate(vec3(500, 200, -2500)) *
 		  glm::scale(vec3(400, 400, -400));
    drawables.push_back(initObstacle(MV, shader, pop));
-	
+*/	
 	//bug with back wall...
-	MV = glm::translate(glm::vec3(-1000, 600, -4000)) * 
+	MV = glm::translate(glm::vec3(-1000, -600, -2000)) * 
 		  glm::rotate((float)(M_PI/2.f), glm::vec3(1, 0, 0)) * 
-		  glm::scale(glm::vec3(8000, 2500, 1));
+		  glm::scale(glm::vec3(8000, -2000, 1));
    drawables.push_back(initAe(MV, shader, pop));
 	
-	MV = glm::translate(glm::vec3(-1000, -1900, -4000)) * 
+	MV = glm::translate(glm::vec3(-1000, -600, -4000)) * 
 		  glm::scale(glm::vec3(8000, 2500, 1));
    drawables.push_back(initAe(MV, shader, pop));
 	

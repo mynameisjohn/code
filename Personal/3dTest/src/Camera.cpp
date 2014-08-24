@@ -5,11 +5,9 @@
 Camera::Camera(){
 	buf=200.f; 
 	mBB = BoundBox(vec3(-1000,0,0),vec3(2000,0,0));
-	projMat=glm::perspective((float)M_PI/4.f, 4.f/3, 100.f, 10000.f);
-	projMat =  
-glm::scale(glm::vec3(1.f, -1.f, -1.f)) * projMat * 
-glm::rotate((float)-M_PI/15.f, vec3(1, 0, 0)) * 
-glm::translate(vec3(0, 750, 0));//remove this
+	projMat=glm::perspective((float)M_PI/4.f, 4.f/3, 100.f, 10000.f) *
+	glm::rotate((float)M_PI/15.f, vec3(1, 0, 0)) * 
+	glm::translate(vec3(0, -800,0));
 }
 
 Camera::Camera(float b, mat4 p){

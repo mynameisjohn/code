@@ -49,7 +49,7 @@ bool JShader::loadProgram(){
 	mMVPHandle = glGetUniformLocation(mProgramID, "MVPMat");
    if (mMVPHandle == -1)
       printf("%s is not a valid shader program variable.\n","MVPMat");
-
+/*
 	int DIM = 100;
 	int th = 8;
 	int PXA[DIM*DIM];
@@ -70,16 +70,15 @@ bool JShader::loadProgram(){
    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-
-
+*/
 	mTexCoordHandle = glGetAttribLocation(mProgramID, "a_TexCoord");
    if (mTexCoordHandle == -1)
       printf("%s is not a valid shader program variable.\n","a_TexCoord");
-
+/*
    mTexHandle = glGetUniformLocation(mProgramID, "u_Texture");
    if (mTexHandle == -1)
       printf("%s is not a valid shader program variable.\n","u_Texture");
-
+*/
 	return true;
 }
 
@@ -100,13 +99,11 @@ GLuint JShader::getTexCoordHandle(){
 	return mTexCoordHandle;
 }
 
-GLuint JShader::getTexHandle(){
-	return texture;
-}
-
+/*
 void JShader::updateSampler(){
 	glUniform1i(mTexHandle, 0);
 }
+*/
 bool JShader::loadFrag(std::string fragStr){
    mFS = loadShaderFromFile(fragStr,GL_FRAGMENT_SHADER);
    if (mFS == 0){

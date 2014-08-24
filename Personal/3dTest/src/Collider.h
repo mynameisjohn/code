@@ -22,12 +22,22 @@ class Collider{
 		bool collidesZ(Collider&);
       char collidesWith(Collider&);
 		bool overlapsWith(Collider&);
+		float toLeft(Collider& c);
+		float toRight(Collider& c);
+		float toBottom(Collider& c);
+		float toTop(Collider& c);
+		float toNear(Collider& c);
+		float toFar(Collider& c);
+		vec3 getPos();
+		vec3 center();
 	private:
 		BoundBox mBB;
 		std::vector<iRect> mSubs;
 		vec3 W_min, W_max;
 		std::map<Collider *, ColBuf> cBufMap;
 	public:
+		/* 
+			I'll re-inline these when the time comes
 		inline vec3 getPos(){
 			return mBB.getPos();
 		}
@@ -52,6 +62,7 @@ class Collider{
 		inline vec3 center(){
 			return mBB.center();
 		}
+		*/
 };
 
 #endif

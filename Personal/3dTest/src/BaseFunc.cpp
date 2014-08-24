@@ -29,7 +29,7 @@ Camera cam;
 bool initGL(){
 	const std::string vertShaderSrc = "shaders/simpleVert.glsl";
 	const std::string fragShaderSrc = "shaders/simpleFrag.glsl";
-
+	
 	//Load Vertex/Fragment Shader files
    if (!shader.loadVert(vertShaderSrc) ||
        !shader.loadFrag(fragShaderSrc))
@@ -46,11 +46,10 @@ bool initGL(){
 	glEnable(GL_DEPTH_TEST);
 	glDepthMask(GL_TRUE);
 	glDepthFunc(GL_LESS);
-	glDepthRange(1.f, 0.f); //why invert dis?	
 	glEnable(GL_CULL_FACE);
+	//glCullFace(GL_FRONT);
    glEnable(GL_MULTISAMPLE);
-	glCullFace(GL_FRONT);
-
+	
 	return true;
 }
 
@@ -76,23 +75,24 @@ void handleEvent(SDL_Event& e){
       pop.handleKey(keyCode(e));
 	}
 	if (keyCode(e) == SDLK_RIGHT)
-		cam.rightMult(glm::translate(vec3(-10, 0, 0)));
+		cam.rightMult(glm::rotate(0.01f, vec3(0, 1, 0)));
 	if (keyCode(e) == SDLK_LEFT)
-		cam.rightMult(glm::translate(vec3(10, 0, 0)));
+		cam.rightMult(glm::rotate(-0.01f, vec3(0, 1, 0)));
 	if (keyCode(e) == SDLK_UP)
-		cam.rightMult(glm::rotate(0.01f, vec3(1, 0, 0)));
-	if (keyCode(e) == SDLK_DOWN)
 		cam.rightMult(glm::rotate(-0.01f, vec3(1, 0, 0)));
+	if (keyCode(e) == SDLK_DOWN)
+		cam.rightMult(glm::rotate(0.01f, vec3(1, 0, 0)));
 }
 
 void render(){
    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-   std::vector<Drawable>::iterator drIter;
+   
+	std::vector<Drawable>::iterator drIter;
 	shader.bind();
    for (drIter = drawables.begin(); drIter != drawables.end(); drIter++){
-      drIter->updateMV();
       if (drIter->isVisible()){
+			drIter->updateMV();
+			glBindTexture(GL_TEXTURE_2D, drIter->getTex());
 			mat4 MVP = cam.getProjMat() * drIter->getMVMat();
 	      shader.updateMVP(glm::value_ptr(MVP));
          shader.updateColor(drIter->getColorPtr());

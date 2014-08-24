@@ -19,8 +19,8 @@ class JShader : public ShaderProgram{
 		void updateSampler();
 	private:
 		GLuint mTexCoordHandle; //Handle to Texture Coordinates
-		GLuint mTexHandle;      //Handle to texture sampler
-		GLuint texture;         //Handle to texture
+		//GLuint mTexHandle;      //Handle to texture sampler
+		//GLuint texture;         //Handle to texture
 		GLint mMVPHandle;   //Handle to MVP matrix
 		//GLint mProjHandle; //Handle to Projection Matrix
 		GLint mColorHandle;//Handle to Frag Color (needed?)

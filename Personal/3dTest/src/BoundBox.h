@@ -9,7 +9,12 @@ public:
    BoundBox(vec3 dim);
    BoundBox(vec3 pos, vec3 dim);
 	void translate(vec3 trans);
-
+	bool collidesWith(BoundBox& other);
+	bool collidesX(BoundBox& other);
+	bool collidesY(BoundBox& other);
+	bool collidesZ(BoundBox& other);
+/*
+	I'll re-inline these when the time comes
 //inline functions
 public:
 	inline bool collidesWith(BoundBox& other){
@@ -29,6 +34,8 @@ public:
 	inline bool collidesZ(BoundBox& other){
 		return !(far() < other.near() || near() > other.far());
 	}
+*/
 };
+
 
 #endif

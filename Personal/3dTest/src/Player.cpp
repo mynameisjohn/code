@@ -18,7 +18,7 @@ void Player::update(){
 	if (grounded)
 		mVel.y=0.f;
 	else
-		mVel.y+=2.f;//gravity?
+		mVel.y-=2.f;//gravity?
 	getHandleInfo();
 }
 

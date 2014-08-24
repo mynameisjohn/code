@@ -36,6 +36,10 @@ void Drawable::setVAO(GLuint VAO){
 	mVAO = VAO;
 }
 
+void Drawable::setTex(GLuint tex){
+	mTex = tex;
+}
+
 void Drawable::leftMultMV(glm::mat4 left){
 	MV = left * MV;
 }
@@ -62,6 +66,10 @@ bool Drawable::isVisible(){
 
 GLuint Drawable::getVAO(){
 	return mVAO;
+}
+
+GLuint Drawable::getTex(){
+	return mTex;
 }
 
 GLfloat * Drawable::getMVPtr(){

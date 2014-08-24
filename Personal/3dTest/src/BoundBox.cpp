@@ -13,3 +13,22 @@ BoundBox::BoundBox(vec3 pos, vec3 dim)
 void BoundBox::translate(vec3 trans){
 	mPos += trans;
 }
+
+bool BoundBox::collidesWith(BoundBox& other){
+	return collidesX(other) && 
+			 collidesY(other) && 
+			 collidesZ(other);
+}
+
+bool BoundBox::collidesX(BoundBox& other){
+	return !(right() < other.left() || left() > other.right());
+}
+
+bool BoundBox::collidesY(BoundBox& other){
+	return !(top() < other.bottom() || bottom() > other.top());
+}
+
+bool BoundBox::collidesZ(BoundBox& other){
+	return !(far() < other.near() || near() > other.far());
+}
+

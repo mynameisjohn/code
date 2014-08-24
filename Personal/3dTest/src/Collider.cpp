@@ -3,8 +3,8 @@
 #include <stdio.h>
 
 Collider::Collider(){
-	W_min=vec3(-1000, -1000, -2200);
-	W_max=vec3(7000, 600, -3600);
+	W_min=vec3(-1000, -600, -2000);
+	W_max=vec3(7000, 600, -4000);
 	cBufMap.clear();
 }
 
@@ -42,28 +42,30 @@ bool Collider::move(vec3 vel){
 	bool grounded = false;//eventually make bools more useful
 	vec3 T;
 
+//	std::cout << getPos().z << std::endl;
+
 	//check wall collision, move accordingly in each dimension
 	if (mBB.left() + vel.x < W_min.x)
 		T.x = W_min.x-mBB.left();//These somehow got reversed...be careful	
 	else if (mBB.right() + vel.x > W_max.x)
-		T.x = (W_max.x - mBB.right());
+		T.x = W_max.x - mBB.right();
 	else
 		T.x += vel.x;
 
-	if (mBB.top() + vel.y < W_min.y)
-		T.y = (mBB.top() - W_min.y);
-	else if (mBB.bottom() + vel.y > W_max.y){
-		T.y = (W_max.y - mBB.bottom());
-		grounded = true;
+	if (mBB.bottom() + vel.y < W_min.y){
+		T.y = W_min.y-mBB.bottom();
+		grounded=true;
 	}
+	else if (mBB.top() + vel.y > W_max.y)
+		T.y = W_max.y-mBB.top();
 	else
 		T.y += vel.y;
 
-	//These have been acting up...	
+	//Note the Z inversion...	
 	if (mBB.near() + vel.z > W_min.z)
 		T.z = W_min.z-mBB.near();
 	else if (mBB.far() + vel.z < W_max.z)
-		T.z = (W_max.z - mBB.far());
+		T.z = W_max.z - mBB.far();
 	else
 		T.z += vel.z;
 	
@@ -105,4 +107,36 @@ bool Collider::overlapsWith(Collider& other){
 		}
 	}
 	return false;
+}
+
+float Collider::toLeft(Collider& c){
+	return c.mBB.left()-mBB.right(); 
+}
+
+float Collider::toRight(Collider& c){
+	return c.mBB.right()-mBB.left(); 
+}
+
+float Collider::toBottom(Collider& c){
+	return c.mBB.bottom()-mBB.top(); 
+}
+
+float Collider::toTop(Collider& c){
+	return c.mBB.top()-mBB.bottom(); 
+}
+
+float Collider::toNear(Collider& c){
+	return c.mBB.near() - mBB.far();
+}
+
+float Collider::toFar(Collider& c){
+	return c.mBB.near()-mBB.far(); 
+}
+
+vec3 Collider::getPos(){
+	return mBB.getPos();
+}
+
+vec3 Collider::center(){
+	return mBB.center();
 }
