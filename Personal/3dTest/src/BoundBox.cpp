@@ -29,6 +29,7 @@ bool BoundBox::collidesY(BoundBox& other){
 }
 
 bool BoundBox::collidesZ(BoundBox& other){
-	return !(far() < other.near() || near() > other.far());
+	return !(far() > other.near() || near() < other.far());
 }
+
 

@@ -9,51 +9,28 @@ TODO
 */
 
 Population::Population(){
-	clearObs();
-	clearAe();
+	//NYI
 }
 
 Population::~Population(){
-	obsVec.clear();
-	aeVec.clear();
+	//NYI
 }
 
 void Population::setPlayer(Player p){
 	player = p;
 }
 
-Entity * Population::addObs(Obstacle obs){
-	if (obsIdx>=obsVec.size()){
-		printf("Too many obstacles added\n");
-		return NULL;
-	}
-
-	obsVec[obsIdx]=obs;
-//	obsVec.push_back(obs);
-//	return (Entity *)&obsVec.back();
-	return &(obsVec[obsIdx++]);
+//These two vectors are held by smart pointers so I can polymorphize
+Entity * Population::addObs(Obstacle obs){//default copy constructor???
+	obsVec.push_back(std::unique_ptr<Obstacle>(new Obstacle(obs)));
+	
+	return obsVec.back().get();
 }
 
 Entity * Population::addActiveEnt(ActiveEnt aE){
-	if (aeIdx>=aeVec.size()){
-      printf("Too many active ents added\n");
-      return NULL;
-   }
+	aeVec.push_back(std::unique_ptr<ActiveEnt>(new ActiveEnt(aE)));
 
-   aeVec[aeIdx]=aE;
-// obsVec.push_back(obs);
-// return (Entity *)&obsVec.back();
-   return &(aeVec[aeIdx++]);
-}
-
-void Population::clearObs(){
-	obsVec.clear();
-	obsIdx=0;
-}
-
-void Population::clearAe(){
-	aeVec.clear();
-	aeIdx=0;
+	return aeVec.back().get();
 }
 
 void Population::handleKey(int k){
@@ -61,12 +38,12 @@ void Population::handleKey(int k){
 }
 
 vec3 Population::move(){
-	std::vector<Obstacle>::iterator obsIt;
+	ObsPtrVec::iterator obsIt;
 
 	//move with respect to (WRT) walls and obstacles	
 	player.moveWRT_walls();
 	for (obsIt=obsVec.begin(); obsIt!=obsVec.end(); obsIt++){
-		player.moveWRT_ent(*obsIt);
+		player.moveWRT_ent(*(*obsIt));
 	}
 
 	return player.center();
@@ -76,7 +53,7 @@ void Population::update(){
 	player.update();
 	//printf("It's really %ld\n",(long)(&obsVec[0]));
 }
-
+/*
 void Population::initObs(int n){
 	clearObs();
 	obsVec.resize(n);
@@ -86,6 +63,7 @@ void Population::initAe(int n){
 	clearAe();
 	aeVec.resize(n);
 }
+*/
 
 Player * Population::getPlayer(){
 	return &player;

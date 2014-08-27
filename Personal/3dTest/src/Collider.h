@@ -10,6 +10,7 @@
 class Collider{
 	public:
 		Collider();
+		Collider(BoundBox bb);
 		~Collider();
 		void setBB(BoundBox);
 		void addSub(iRect sub);

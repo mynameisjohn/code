@@ -9,10 +9,21 @@ class Entity{
 		Entity(Collider c);
 		void setCol(Collider c);
 		void setBB(BoundBox bb);
+		void translate(vec3);
 		virtual char collidesWith(Entity& e);
 		bool overlapsWith(Entity& e);
+		float toLeft(Entity&);	
+		float toRight(Entity&);
+		float toBottom(Entity&);
+		float toTop(Entity&);
+		float toNear(Entity&);
+		float toFar(Entity&);
+		vec3 getPos();
+		vec3 center();
 	protected:
 		Collider mCollider;
+
+	/* These will be inlined when the time comes
 	public:
 		inline void translate(vec3 trans){
 			mCollider.translate(trans);
@@ -41,6 +52,7 @@ class Entity{
 		inline vec3 center(){
 			return mCollider.center();
 		}
+*/
 };
 
 

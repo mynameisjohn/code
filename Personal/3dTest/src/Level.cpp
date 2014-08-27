@@ -2,28 +2,22 @@
 #include <glm/gtx/transform.hpp> 
 
 std::vector<Drawable> initLevel(JShader& shader, Population& pop){
-	
-	const int nObs = 2;
-   const int nAe = 2;
 	std::vector<Drawable> drawables;
 	glm::mat4 MV;
-
-   pop.initObs(nObs);
-   pop.initAe(nAe);
 
 	//Note the negative Z scale...never got around that	
 	MV = glm::translate(vec3(0, 999, 3500)) *
 		  glm::scale(vec3(400, 400, -400));
    drawables.push_back(initPlayer(MV, shader, pop));
-/*
-	MV = glm::translate(vec3(1500, 200, -2500)) *
+
+	MV = glm::translate(vec3(1500, -600, -2500)) *
 		  glm::scale(vec3(400, 400, -400));
 	drawables.push_back(initObstacle(MV,shader,pop));
  
-	MV = glm::translate(vec3(500, 200, -2500)) *
+	MV = glm::translate(vec3(500, -600, -2500)) *
 		  glm::scale(vec3(400, 400, -400));
    drawables.push_back(initObstacle(MV, shader, pop));
-*/	
+	
 	//bug with back wall...
 	MV = glm::translate(glm::vec3(-1000, -600, -2000)) * 
 		  glm::rotate((float)(M_PI/2.f), glm::vec3(1, 0, 0)) * 
@@ -44,15 +38,18 @@ Drawable initPlayer(glm::mat4 MV, JShader& shader, Population& pop){
 	iRect rect;
 
 	vec3 translate = vec3(MV * glm::vec4(0, 0, 0, 1));
+	vec3 scale = vec3(MV * glm::vec4(1, 1, 1, 1)) - translate;
+	scale.z *= -1.f;
 
-	Player * playerPtr = pop.getPlayer();
-	dr = initCube(MV, shader);
-	bb = BoundBox(translate, vec3(400, 400, 400));
-   c.setBB(bb);
    rect = iRect(0, 0, 40, 20);
+	bb = BoundBox(translate, scale);
+   c=Collider(bb);
    c.addSub(rect);
    rect = iRect(0, 20, 40, 20);
    c.addSub(rect);
+	
+	Player * playerPtr = pop.getPlayer();
+	dr = initCube(MV, shader);
    playerPtr->setCol(c);
    dr.setEntity((Entity *)playerPtr);
    dr.setColor(0.871, 0.871, 0.871);
@@ -61,6 +58,28 @@ Drawable initPlayer(glm::mat4 MV, JShader& shader, Population& pop){
 }
 
 Drawable initObstacle(glm::mat4 MV, JShader& shader, Population& pop){
+	Obstacle obs;
+	Drawable dr;
+	BoundBox bb;
+	Collider c;
+	iRect rect;
+
+	vec3 translate = vec3(MV * glm::vec4(0, 0, 0, 1));
+	vec3 scale = vec3(MV * glm::vec4(1, 1, 1, 1)) - translate;
+	scale.z *= -1.f;
+
+   rect = iRect(0, 0, 40, 20);
+	bb = BoundBox(translate, scale);
+   c=Collider(bb);
+   c.addSub(rect);
+   rect = iRect(0, 20, 40, 20);
+   c.addSub(rect);
+	
+	dr = initCube(MV, shader);
+	obs.setCol(c);
+   dr.setEntity(pop.addObs(obs));
+   dr.setColor(0.871, 0.271, 0.871);
+/*
 	Drawable dr;
    BoundBox bb;
    Collider c;
@@ -69,6 +88,7 @@ Drawable initObstacle(glm::mat4 MV, JShader& shader, Population& pop){
 	Obstacle obs;
 
 	vec3 translate = vec3(MV * glm::vec4(0, 0, 0, 1));
+	
 
 	dr = initCube(MV, shader);
    c = Collider();
@@ -82,7 +102,7 @@ Drawable initObstacle(glm::mat4 MV, JShader& shader, Population& pop){
    obs.translate(translate);
    dr.setEntity(pop.addObs(obs)); //lastObsAsEnt());
    dr.setColor(0.8f, 0.4f, 0.2f);
-
+*/
 	return dr;
 }
 
@@ -104,7 +124,8 @@ Drawable initAe(glm::mat4 MV, JShader& shader, Population& pop){
    c.addSub(rect);
    aE.setCol(c);
    aE.translate(translate);
-   dr.setEntity(pop.addActiveEnt(aE));
+	Entity * ePtr = pop.addActiveEnt(aE);
+   dr.setEntity(ePtr);
    dr.setColor(0.4f, 0.8f, 0.2f);
 
    return dr;

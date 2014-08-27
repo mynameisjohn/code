@@ -8,6 +8,11 @@ Collider::Collider(){
 	cBufMap.clear();
 }
 
+Collider::Collider(BoundBox bb)
+: Collider(){
+	mBB = bb;
+}
+
 Collider::~Collider(){
 	cBufMap.clear();
 }
@@ -130,7 +135,7 @@ float Collider::toNear(Collider& c){
 }
 
 float Collider::toFar(Collider& c){
-	return c.mBB.near()-mBB.far(); 
+	return c.mBB.far()-mBB.near(); 
 }
 
 vec3 Collider::getPos(){

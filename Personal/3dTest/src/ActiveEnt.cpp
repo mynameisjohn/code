@@ -15,6 +15,8 @@ void ActiveEnt::moveWRT_walls(){
 
 void ActiveEnt::moveWRT_ent(Entity& e){
 	char last = collidesWith(e);
+
+//	printf("%lf\t%lf\t%lf\n",e.center().x, e.center().y, e.center().z);
 	switch (last){
 		case 'x':
 			if (mVel.x > 0)
@@ -33,9 +35,9 @@ void ActiveEnt::moveWRT_ent(Entity& e){
 
 		case 'z':
 			if (mVel.z > 0)
-            translate(vec3(0, 0, toNear(e)));
-         else if (mVel.z < 0)
             translate(vec3(0, 0, toFar(e)));
+         else if (mVel.z < 0)
+            translate(vec3(0, 0, toNear(e)));
 			break;
 
 		default:
