@@ -1,10 +1,18 @@
 #include "Level.h"
 #include <glm/gtx/transform.hpp> 
 
+const vec3 wallMin(-1000, -600, -2000);
+const vec3 wallMax(7000, 600, -4000);
+
 std::vector<Drawable> initLevel(JShader& shader, Population& pop){
 	std::vector<Drawable> drawables;
 	glm::mat4 MV;
-
+/*
+	glEnableVertexAttribArray(shader.getPosHandle());
+	glVertexAttribPointer(shader.getPosHandle(), 4, GL_FLOAT, 0, 0, 0);
+	glEnableVertexAttribArray(shader.getTexCoordHandle());
+	glVertexAttribPointer(shader.getTexCoordHandle(), 2, GL_FLOAT, 0, 0, 0);
+*/
 	//Note the negative Z scale...never got around that	
 	MV = glm::translate(vec3(0, 999, 3500)) *
 		  glm::scale(vec3(400, 400, -400));
@@ -43,7 +51,7 @@ Drawable initPlayer(glm::mat4 MV, JShader& shader, Population& pop){
 
    rect = iRect(0, 0, 40, 20);
 	bb = BoundBox(translate, scale);
-   c=Collider(bb);
+   c=Collider(wallMin, wallMax, bb);
    c.addSub(rect);
    rect = iRect(0, 20, 40, 20);
    c.addSub(rect);
@@ -70,7 +78,7 @@ Drawable initObstacle(glm::mat4 MV, JShader& shader, Population& pop){
 
    rect = iRect(0, 0, 40, 20);
 	bb = BoundBox(translate, scale);
-   c=Collider(bb);
+   c=Collider(wallMin, wallMax, bb);
    c.addSub(rect);
    rect = iRect(0, 20, 40, 20);
    c.addSub(rect);
@@ -79,56 +87,34 @@ Drawable initObstacle(glm::mat4 MV, JShader& shader, Population& pop){
 	obs.setCol(c);
    dr.setEntity(pop.addObs(obs));
    dr.setColor(0.871, 0.271, 0.871);
-/*
-	Drawable dr;
-   BoundBox bb;
-   Collider c;
-   iRect rect;
-
-	Obstacle obs;
-
-	vec3 translate = vec3(MV * glm::vec4(0, 0, 0, 1));
 	
-
-	dr = initCube(MV, shader);
-   c = Collider();
-	bb = BoundBox(vec3(), vec3(400, 400, 400));
-   c.setBB(bb);
-   rect = iRect(0, 0, 40, 20);
-   c.addSub(rect);
-   rect = iRect(0, 20, 40, 20);
-   c.addSub(rect);
-   obs.setCol(c);
-   obs.translate(translate);
-   dr.setEntity(pop.addObs(obs)); //lastObsAsEnt());
-   dr.setColor(0.8f, 0.4f, 0.2f);
-*/
 	return dr;
 }
 
 Drawable initAe(glm::mat4 MV, JShader& shader, Population& pop){
-   Drawable dr;
-   BoundBox bb;
-   Collider c;
-   iRect rect;
-	vec3 translate = vec3(MV * glm::vec4(0, 0, 0, 1));
    ActiveEnt aE;
+	Drawable dr;
+	BoundBox bb;
+	Collider c;
+	iRect rect;
 
-   dr = initQuad(MV, shader);
-   c = Collider();
-	bb = BoundBox(vec3(), vec3(400, 400, 1));
-   c.setBB(bb);
+	vec3 translate = vec3(MV * glm::vec4(0, 0, 0, 1));
+	vec3 scale = vec3(MV * glm::vec4(1, 1, 1, 1)) - translate;
+	scale.z *= -1.f;
+
    rect = iRect(0, 0, 40, 20);
+	bb = BoundBox(translate, scale);
+   c=Collider(wallMin, wallMax, bb);
    c.addSub(rect);
    rect = iRect(0, 20, 40, 20);
    c.addSub(rect);
-   aE.setCol(c);
-   aE.translate(translate);
-	Entity * ePtr = pop.addActiveEnt(aE);
-   dr.setEntity(ePtr);
-   dr.setColor(0.4f, 0.8f, 0.2f);
-
-   return dr;
+	
+	dr = initCube(MV, shader);
+	aE.setCol(c);
+   dr.setEntity(pop.addActiveEnt(aE));
+   dr.setColor(0.871, 0.271, 0.871);
+	
+	return dr;
 }
 
 std::pair<vec3, vec3> createWalls(){

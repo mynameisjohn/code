@@ -25,11 +25,11 @@ void ActiveEnt::moveWRT_ent(Entity& e){
             translate(vec3(toRight(e), 0, 0));
 			break;
 		case 'y':
-			if (mVel.y > 0){
+			if (mVel.y < 0){
             translate(vec3(0,toTop(e), 0));
 				grounded = true;
 			}
-         else if (mVel.y < 0)
+         else if (mVel.y > 0)
             translate(vec3(0, toBottom(e), 0));
 			break;
 

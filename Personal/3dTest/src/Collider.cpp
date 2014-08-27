@@ -2,15 +2,18 @@
 
 #include <stdio.h>
 
+//Collider shouldn't own this info...
 Collider::Collider(){
-	W_min=vec3(-1000, -600, -2000);
-	W_max=vec3(7000, 600, -4000);
+	W_min=vec3(); 
+	W_max=vec3(1000, 1000, -1000);
 	cBufMap.clear();
 }
 
-Collider::Collider(BoundBox bb)
-: Collider(){
+Collider::Collider(vec3 w_min, vec3 w_max, BoundBox bb){
+	W_min=w_min;
+	W_max=w_max;
 	mBB = bb;
+	cBufMap.clear();
 }
 
 Collider::~Collider(){

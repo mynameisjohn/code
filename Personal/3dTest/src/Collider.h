@@ -10,7 +10,7 @@
 class Collider{
 	public:
 		Collider();
-		Collider(BoundBox bb);
+		Collider(vec3 w_min, vec3 w_max, BoundBox bb);
 		~Collider();
 		void setBB(BoundBox);
 		void addSub(iRect sub);
