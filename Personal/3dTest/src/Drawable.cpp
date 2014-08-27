@@ -32,6 +32,10 @@ void Drawable::setColor(float r, float g, float b){
 	mColor.w=1.f;
 }
 
+void Drawable::setColor(vec3 color){
+	mColor = glm::vec4(color, 1.f);
+}
+
 void Drawable::setVAO(GLuint VAO){
 	mVAO = VAO;
 }
