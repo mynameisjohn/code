@@ -1,0 +1,6 @@
+let g:netrw_dirhistmax  =10
+let g:netrw_dirhist_cnt =4
+let g:netrw_dirhist_1='/home/john/Documents/code/SDL/28_per-pixel_collision_detection'
+let g:netrw_dirhist_2='/home/john/Documents/code/CPP/SDL/opengl/shaders'
+let g:netrw_dirhist_3='/home/john/Documents/code/CPP/SDL/opengl'
+let g:netrw_dirhist_4='/home/john/Documents/code/CPP/SDL/lazyfoo/27_collision_detection'
