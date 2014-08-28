@@ -1,25 +1,20 @@
 #include "Level.h"
 #include <glm/gtx/transform.hpp> 
 
-const vec3 wallMin(-1000, -600, -2000);
-const vec3 wallMax(7000, 600, -4000);
+const vec3 wallMin(-10000, -60300, -2000);
+const vec3 wallMax(17000, 600, -50020);
 
 std::vector<Drawable> initLevel(JShader& shader, Population& pop){
 	std::vector<Drawable> drawables;
 	glm::mat4 MV;
 	vec3 color;
-/*
-	glEnableVertexAttribArray(shader.getPosHandle());
-	glVertexAttribPointer(shader.getPosHandle(), 4, GL_FLOAT, 0, 0, 0);
-	glEnableVertexAttribArray(shader.getTexCoordHandle());
-	glVertexAttribPointer(shader.getTexCoordHandle(), 2, GL_FLOAT, 0, 0, 0);
-*/
+	
 	//Note the negative Z scale...never got around that	
-	MV = glm::translate(vec3(0, 999, 3500)) *
+	MV = glm::translate(vec3(0, 999, 2500)) *
 		  glm::scale(vec3(400, 400, -400));
 	color = vec3(0.2, 0.4f, 0.8f);
    drawables.push_back(initPlayer(MV, color, shader, pop));
-
+	
 	MV = glm::translate(vec3(1500, -600, -2500)) *
 		  glm::scale(vec3(400, 400, -400));
 	color = vec3(0.4f, 0.8f, 0.2f);
@@ -29,17 +24,28 @@ std::vector<Drawable> initLevel(JShader& shader, Population& pop){
 		  glm::scale(vec3(400, 400, -400));
    drawables.push_back(initObstacle(MV, color, shader, pop));
 	
-	//bug with back wall...
+	color=vec3(1.f, 1.f, 1.f);
+	//floor...
 	MV = glm::translate(glm::vec3(-1000, -600, -2000)) * 
 		  glm::rotate((float)(M_PI/2.f), glm::vec3(1, 0, 0)) * 
-		  glm::scale(glm::vec3(8000, -2000, 1));
-	color=vec3(1.f, 1.f, 1.f);
-   drawables.push_back(initAe(MV, color, shader, pop));
+		  glm::scale(glm::vec3(8000, -2000, -2));
+   drawables.push_back(initWall(MV, color, shader, pop));
 	
+	//back wall
 	MV = glm::translate(glm::vec3(-1000, -600, -4000)) * 
-		  glm::scale(glm::vec3(8000, 2500, 1));
-   drawables.push_back(initAe(MV, color, shader, pop));
-	
+		  glm::scale(glm::vec3(8000, 2500, -2));
+   drawables.push_back(initWall(MV, color, shader, pop));
+
+	MV = glm::translate(glm::vec3(-1000, -600, -2000)) * 
+		  glm::rotate((float)(M_PI/2.f), glm::vec3(0, 1, 0)) * 
+		  glm::scale(glm::vec3(2000, 2500, -2));
+   drawables.push_back(initWall(MV, color, shader, pop));
+
+	MV = glm::translate(glm::vec3(7000, -600, -2000)) * 
+		  glm::rotate((float)(M_PI/2.f), glm::vec3(0, 1, 0)) * 
+		  glm::scale(glm::vec3(2000, 2500, -2));
+   drawables.push_back(initWall(MV, color, shader, pop));
+
 	return drawables;
 }
 
@@ -50,8 +56,7 @@ Drawable initPlayer(glm::mat4 MV, vec3 color, JShader& shader, Population& pop){
 	iRect rect;
 
 	vec3 translate = vec3(MV * glm::vec4(0, 0, 0, 1));
-	vec3 scale = vec3(MV * glm::vec4(1, 1, 1, 1)) - translate;
-	scale.z *= -1.f;
+	vec3 scale = glm::abs(vec3(MV * glm::vec4(1, 1, 1, 1)) - translate);
 
    rect = iRect(0, 0, 40, 20);
 	bb = BoundBox(translate, scale);
@@ -77,8 +82,7 @@ Drawable initObstacle(glm::mat4 MV, vec3 color, JShader& shader, Population& pop
 	iRect rect;
 
 	vec3 translate = vec3(MV * glm::vec4(0, 0, 0, 1));
-	vec3 scale = vec3(MV * glm::vec4(1, 1, 1, 1)) - translate;
-	scale.z *= -1.f;
+	vec3 scale = glm::abs(vec3(MV * glm::vec4(1, 1, 1, 1)) - translate);
 
    rect = iRect(0, 0, 40, 20);
 	bb = BoundBox(translate, scale);
@@ -103,8 +107,7 @@ Drawable initAe(glm::mat4 MV, vec3 color, JShader& shader, Population& pop){
 	iRect rect;
 
 	vec3 translate = vec3(MV * glm::vec4(0, 0, 0, 1));
-	vec3 scale = vec3(MV * glm::vec4(1, 1, 1, 1)) - translate;
-	scale.z *= -1.f;
+	vec3 scale = glm::abs(vec3(MV * glm::vec4(1, 1, 1, 1)) - translate);
 
    rect = iRect(0, 0, 40, 20);
 	bb = BoundBox(translate, scale);
@@ -121,6 +124,27 @@ Drawable initAe(glm::mat4 MV, vec3 color, JShader& shader, Population& pop){
 	return dr;
 }
 
-std::pair<vec3, vec3> createWalls(){
+Drawable initWall(glm::mat4 MV, vec3 color, JShader& shader, Population& pop){
+	Obstacle obs;
+	Drawable dr;
+	BoundBox bb;
+	Collider c;
+	iRect rect;
 
+	vec3 translate = vec3(MV * glm::vec4(0, 0, 0, 1));
+	vec3 scale = glm::abs(vec3(MV * glm::vec4(1, 1, 1, 1)) - translate);
+
+   rect = iRect(0, 0, 40, 20);
+	bb = BoundBox(translate, scale);
+   c=Collider(wallMin, wallMax, bb);
+   c.addSub(rect);
+   rect = iRect(0, 20, 40, 20);
+   c.addSub(rect);
+	
+	dr = initQuad(MV, shader);
+	obs.setCol(c);
+   dr.setEntity(pop.addObs(obs));
+   dr.setColor(color);
+	
+	return dr;
 }

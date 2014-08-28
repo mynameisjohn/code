@@ -1,6 +1,6 @@
-#include "circBuf.h"
+#include "CircBuf.h"
 
-class ColBuf : public circBuf{
+class ColBuf : public CircBuf<int>{
 public:
 	ColBuf(int dim = 3);
 	void addDimCol(unsigned int, bool);

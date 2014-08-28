@@ -9,6 +9,7 @@
 Drawable initPlayer(glm::mat4 MV, vec3 color, JShader& shader, Population& pop);
 Drawable initObstacle(glm::mat4 MV, vec3 color, JShader& shader, Population& pop);
 Drawable initAe(glm::mat4 MV, vec3 color, JShader& shader, Population& pop);
+Drawable initWall(glm::mat4 MV, vec3 color, JShader& shader, Population& pop);
 std::vector<Drawable> initLevel(JShader& shader, Population& pop);
 
 #endif

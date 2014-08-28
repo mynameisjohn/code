@@ -10,7 +10,7 @@ class Entity{
 		void setCol(Collider c);
 		void setBB(BoundBox bb);
 		void translate(vec3);
-		virtual char collidesWith(Entity& e);
+		char collidesWith(Entity& e);
 		bool overlapsWith(Entity& e);
 		float toLeft(Entity&);	
 		float toRight(Entity&);

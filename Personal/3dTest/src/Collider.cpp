@@ -1,5 +1,4 @@
 #include "Collider.h"
-
 #include <stdio.h>
 
 //Collider shouldn't own this info...

@@ -46,7 +46,7 @@ bool initGL(){
 	glEnable(GL_DEPTH_TEST);
 	glDepthMask(GL_TRUE);
 	glDepthFunc(GL_LESS);
-	glEnable(GL_CULL_FACE);
+	//glEnable(GL_CULL_FACE); //maybe put this back later...
    glEnable(GL_MULTISAMPLE);
 	
 	return true;

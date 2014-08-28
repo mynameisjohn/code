@@ -51,7 +51,7 @@ Drawable initQuad(glm::mat4 MV, JShader& shader){
    glBindVertexArray(0);
 
 	dr.setVAO(tmpVAO);
-	dr.setTex(invertedOutlineTexture());
+	dr.setTex(outlineTexture());
 	dr.setMV(MV);
 	dr.setNElements(nIndices);
 

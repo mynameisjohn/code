@@ -1,6 +1,6 @@
 #include "ColBuf.h"
 
-ColBuf::ColBuf(int dim) : circBuf(dim){
+ColBuf::ColBuf(int dim) : CircBuf<int>(dim){
 	collisions=0;
 	x=1; y=2; z=4;
 }
