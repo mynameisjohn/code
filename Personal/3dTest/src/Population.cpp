@@ -63,7 +63,6 @@ glm::vec4 Population::move(){
 		}
 	}
 	
-
 	return glm::vec4(player.center(), fabs(player.getVel().x));
 }
 
@@ -75,7 +74,6 @@ void Population::update(){
 	
 	for (aeIt=aeVec.begin(); aeIt!=aeVec.end(); aeIt++)
 		aeIt->get()->update();
-	//printf("It's really %ld\n",(long)(&obsVec[0]));
 	for (obsIt=obsVec.begin(); obsIt!=obsVec.end(); obsIt++)
 		obsIt->get()->update();
 }

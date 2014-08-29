@@ -15,7 +15,6 @@ class iRect{
 		int x, y, w, h;
 };
 
-
 inline int iRect::bottom(){
 	return y+h;
 }
