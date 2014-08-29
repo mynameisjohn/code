@@ -8,15 +8,17 @@ class ActiveEnt: public Entity{
 	public:
 		ActiveEnt();
 		ActiveEnt(Collider c);
-		virtual void update(){};//NYI
+		void update();//NYI
 		void moveWRT_walls();
 		void moveWRT_ent(Entity& e);
-		virtual void move(){};
 		void moveToEdge(int, Entity&);
+		//virtual void move();//Make this pure asap
+		vec3 getVel();
 	protected:
-		vec3 mVel;
-		vec3 mSpeed;
-		bool grounded;
+		vec3 mVel; //Active velocity
+		vec3 mSpeed; //Individual speed
+		bool grounded; //Whether it's on top of something
+		float speedOsc;
 };
 
 #endif

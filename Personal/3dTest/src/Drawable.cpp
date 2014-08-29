@@ -1,28 +1,31 @@
+#include <GL/glew.h>
 #include "Drawable.h"
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtx/transform.hpp>
 #include <stdio.h>
 
 Drawable::Drawable(){
-	MV = glm::mat4();
+	MV = mat4();
 	mColor = {1.f, 1.f, 1.f, 1.f};
 	mPos = glm::vec3();
 	visible = true;
-	myEntity = NULL;
 	mElementCount=4;
 }
 
 Drawable::~Drawable(){
 	mVAO = 0;
-	myEntity = NULL;
 }
 
-void Drawable::setMV(glm::mat4 newMatrix){
+void Drawable::setPos(vec3 pos){
+	mPos = pos;
+}
+
+void Drawable::setMV(mat4 newMatrix){
 	MV = newMatrix;
 }
 
 void Drawable::identity(){
-	MV = glm::mat4();
+	MV = mat4();
 }
 
 void Drawable::setColor(float r, float g, float b){
@@ -44,28 +47,32 @@ void Drawable::setTex(GLuint tex){
 	mTex = tex;
 }
 
-void Drawable::leftMultMV(glm::mat4 left){
+void Drawable::leftMultMV(mat4 left){
 	MV = left * MV;
-}
-
-void Drawable::setEntity(Entity * e){
-	myEntity = e;
-	mPos=e->getPos();
 }
 
 void Drawable::setNElements(int n){
 	mElementCount = n;
 }
 
-void Drawable::updateMV(){
-	vec3 translate = myEntity->getPos() - mPos;
-	leftMultMV(glm::translate(translate));
-	mPos += translate;
-	//printf("%lf\n", mPos.x);
+void Drawable::draw(GLint MVHandle, GLint ColorHandle){
+	uploadData(MVHandle, ColorHandle); //send MV matrix and color to GPU
+	glBindTexture(GL_TEXTURE_2D, mTex); //Make my texture active
+	glBindVertexArray(mVAO); //Bind my VAO
+	glDrawElements(GL_TRIANGLE_STRIP, mElementCount, GL_UNSIGNED_INT, NULL);
+}
+
+void Drawable::uploadData(GLint MVHandle, GLint ColorHandle){
+	glUniformMatrix4fv(MVHandle, 1, GL_FALSE, glm::value_ptr(MV));
+	glUniform4fv(ColorHandle, 1, glm::value_ptr(mColor));
 }
 
 bool Drawable::isVisible(){
 	return visible;
+}
+
+int Drawable::getNumElems(){
+	return mElementCount;
 }
 
 GLuint Drawable::getVAO(){
@@ -84,10 +91,7 @@ GLfloat * Drawable::getColorPtr(){
 	return glm::value_ptr(mColor);
 }
 
-int Drawable::getNumElems(){
-	return mElementCount;
-}
 
-glm::mat4 Drawable::getMVMat(){
+mat4 Drawable::getMVMat(){
 	return MV;
 }

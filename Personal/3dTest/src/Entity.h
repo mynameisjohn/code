@@ -2,6 +2,7 @@
 #define ENTITY_H
 
 #include "Collider.h"
+#include "Drawable.h"
 
 class Entity{
 	public:
@@ -10,6 +11,8 @@ class Entity{
 		void setCol(Collider c);
 		void setBB(BoundBox bb);
 		void translate(vec3);
+		void addDrawable(Drawable dr);
+		void draw(int MVHandle, int ColorHandle);
 		char collidesWith(Entity& e);
 		bool overlapsWith(Entity& e);
 		float toLeft(Entity&);	
@@ -20,9 +23,11 @@ class Entity{
 		float toFar(Entity&);
 		vec3 getPos();
 		vec3 center();
+		virtual void update()=0;
 	protected:
 		Collider mCollider;
-
+		Drawable mDrawable;
+		vec3 mTrans;
 	/* These will be inlined when the time comes
 	public:
 		inline void translate(vec3 trans){

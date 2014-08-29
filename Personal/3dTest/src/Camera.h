@@ -10,11 +10,12 @@ class Camera{
 		Camera();
 		Camera(float b, mat4 p);
 		void translate(vec3 trans);
-		void push(vec3 center);
+		void push(glm::vec4 player);
 		void setProjMat(mat4 p);
 		void leftMult(mat4 m);
 		void rightMult(mat4 m);
 		mat4 getProjMat();
+		void updateProj(int projHandle);
 	private:
 		BoundBox mBB;
 		mat4 projMat;

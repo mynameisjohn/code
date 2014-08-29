@@ -1,4 +1,5 @@
 #include "Entity.h"
+#include <glm/gtx/transform.hpp>
 
 Entity::Entity(){
 	//NYI
@@ -6,6 +7,15 @@ Entity::Entity(){
 
 Entity::Entity(Collider c){
 	mCollider = c;
+}
+
+void Entity::draw(int MVHandle, int ColorHandle){
+	mDrawable.leftMultMV(glm::translate(mTrans));
+	mDrawable.draw(MVHandle, ColorHandle);
+}
+
+void Entity::addDrawable(Drawable dr){
+	mDrawable = dr;
 }
 
 void Entity::setCol(Collider c){
@@ -25,7 +35,8 @@ bool Entity::overlapsWith(Entity& e){
 	return mCollider.overlapsWith(e.mCollider);
 }
 
-void Entity::translate(vec3 trans){ 
+void Entity::translate(vec3 trans){
+	mTrans += trans;
 	mCollider.translate(trans); 
 } 
 vec3 Entity::getPos(){ 

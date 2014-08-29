@@ -25,6 +25,8 @@ class ShaderProgram
 	protected:
 		void printProgramLog(GLuint program); //Print Program Log
 		void printShaderLog(GLuint shader);   //Print Shader Log
+		GLint getAttribHandle(std::string name);
+		GLint getUniformHandle(std::string name);
 		GLuint loadShaderFromFile(std::string path, GLenum shaderType); //Load Shader from Text File
 		GLuint mProgramID; //Program ID
 };

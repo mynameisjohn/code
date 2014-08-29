@@ -1,21 +1,23 @@
 #include <GL/glew.h>
 #include <GL/gl.h>
-#include <SDL2/SDL_thread.h>
-#include "BaseFunc.h"
+#include "BaseEngine.h"
 
-#define SCREEN_WIDTH 720
-#define SCREEN_HEIGHT 480
+#define SCREEN_WIDTH 800
+#define SCREEN_HEIGHT 600
 
-
-bool init();
+bool init(BaseEngine& engine);
 void close();
 
 SDL_Window * gWindow;
 SDL_GLContext gContext;
 
+const std::string vertexShaderSrc = "shaders/simpleVert.glsl";
+const std::string fragShaderSrc = "shaders/simpleFrag.glsl";
+
 int main(int argc, char ** argv){
+	BaseEngine engine;
 	//Initialize Everything
-	if (!init()){
+	if (!init(engine)){
 	   printf( "Failed to initialize!\n" );
       return EXIT_FAILURE;
    }
@@ -23,20 +25,18 @@ int main(int argc, char ** argv){
 	//polling boolean, key event, sub thread
 	bool quit = false;
 	SDL_Event e;
-	SDL_Thread * subThread = NULL;
 
 	//main event loop
 	while (!quit){
 		while (SDL_PollEvent(&e) != 0){
 			if (e.type == SDL_QUIT)
 				quit = true;
-			handleEvent(e);
+			engine.handleEvent(e);
 		}
-		move();
-		update(NULL);
-		///SDL_CreateThread(update, "Update Thread", NULL);
-		render();
-		//SDL_WaitThread(subThread, NULL);
+		engine.move();
+		engine.update();
+		engine.render();
+		
 		SDL_GL_SwapWindow(gWindow);
 	}
 	close();
@@ -44,7 +44,7 @@ int main(int argc, char ** argv){
 	return EXIT_SUCCESS;
 }
 
-bool init(){
+bool init(BaseEngine& engine){
    //Init SDL Video
    if (SDL_Init( SDL_INIT_VIDEO ) < 0){
       printf("SDL could not initialize! SDL Error: %s\n", SDL_GetError());
@@ -87,17 +87,24 @@ bool init(){
       printf( "Warning: Unable to set VSync! SDL Error: %s\n", SDL_GetError());
    }
 
-	//Initialize OpenGL
-   if(!initGL()){
+	//Initialize Shaders and Engine
+   if(!engine.init(vertexShaderSrc, fragShaderSrc)){
       printf( "Unable to initialize OpenGL!\n" );
       return false;
    }
 
-   return true;
+	//OpenGL settings
+	glClearColor(0.2f, 0.2f, 0.2f, 1.f);
+	glEnable(GL_DEPTH_TEST);
+	glDepthMask(GL_TRUE);
+	glDepthFunc(GL_LESS);
+	//glEnable(GL_CULL_FACE); //maybe put this back later...
+   glEnable(GL_MULTISAMPLE);
+   
+	return true;
 }
 
 void close(){
-	closeShader();
 	SDL_DestroyWindow(gWindow);
 	gWindow = NULL;
 	SDL_Quit();

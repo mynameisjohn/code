@@ -17,12 +17,13 @@ class Population{
 		//void clearObs();
 		//void clearAe();
 		void update();
-		vec3 move();
+		void draw(int, int);
+		glm::vec4 move();
 		//void initObs(int);
 		//void initAe(int);
 		Player * getPlayer();
-		Entity * addObs(Obstacle obs);
-		Entity * addActiveEnt(ActiveEnt aE);
+		void addObs(Obstacle obs);
+		void addActiveEnt(ActiveEnt aE);
 	private:
 		Player player;
 		ObsPtrVec obsVec;

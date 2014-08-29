@@ -15,7 +15,9 @@ Player::~Player(){
 }
 
 void Player::update(){
-	if (grounded)
+	vec3 pos = getPos();
+
+	if (mCollider.isGrounded())
 		mVel.y=0.f;
 	else
 		mVel.y-=2.f;//gravity?
@@ -28,7 +30,7 @@ void Player::handleKey(int k){
 
 void Player::getHandleInfo(){
 // uncomment to prohibit mid-air movement
-//	if (grounded){
+//	if (mCollider.isGrounded){
 	float dashSpeed = mSpeed.x*(mHandler.getKeyState(SDLK_LSHIFT) ? mDash : 1.f);
 	bool jump = mHandler.getKeyState(SDLK_SPACE);
 
@@ -38,7 +40,7 @@ void Player::getHandleInfo(){
 	if (mHandler.getKeyState(SDLK_d))
 		mVel.x += dashSpeed;
 	
-	mVel.y += jump && grounded ? mSpeed.y : 0;
+	mVel.y += jump && mCollider.isGrounded() ? mSpeed.y : 0;
 	
 	mVel.z=0;
 	if (mHandler.getKeyState(SDLK_w))

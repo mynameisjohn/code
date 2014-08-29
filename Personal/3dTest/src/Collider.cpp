@@ -19,6 +19,10 @@ Collider::~Collider(){
 	cBufMap.clear();
 }
 
+void Collider::ground(){
+	grounded = true;
+}
+
 void Collider::setBB(BoundBox bb){
 	mBB = bb;
 }
@@ -44,40 +48,7 @@ void Collider::translate(vec3 trans){
 		rectIt->translate(trans.x,trans.y);
 }
 
-//This just moves the collider with respect to the walls
-bool Collider::move(vec3 vel){
-	bool grounded = false;//eventually make bools more useful
-	vec3 T;
-
-//	std::cout << getPos().z << std::endl;
-
-	//check wall collision, move accordingly in each dimension
-	if (mBB.left() + vel.x < W_min.x)
-		T.x = W_min.x-mBB.left();//These somehow got reversed...be careful	
-	else if (mBB.right() + vel.x > W_max.x)
-		T.x = W_max.x - mBB.right();
-	else
-		T.x += vel.x;
-
-	if (mBB.bottom() + vel.y < W_min.y){
-		T.y = W_min.y-mBB.bottom();
-		grounded=true;
-	}
-	else if (mBB.top() + vel.y > W_max.y)
-		T.y = W_max.y-mBB.top();
-	else
-		T.y += vel.y;
-
-	//Note the Z inversion...	
-	if (mBB.near() + vel.z > W_min.z)
-		T.z = W_min.z-mBB.near();
-	else if (mBB.far() + vel.z < W_max.z)
-		T.z = W_max.z - mBB.far();
-	else
-		T.z += vel.z;
-	
-	translate(T);
-
+bool Collider::isGrounded(){
 	return grounded;
 }
 
@@ -140,10 +111,45 @@ float Collider::toFar(Collider& c){
 	return c.mBB.far()-mBB.near(); 
 }
 
+vec3 Collider::center(){
+	return mBB.center();
+}
+
 vec3 Collider::getPos(){
 	return mBB.getPos();
 }
 
-vec3 Collider::center(){
-	return mBB.center();
+//This just moves the collider with respect to the walls
+vec3 Collider::move(vec3 vel){
+	grounded=false;
+	vec3 T;
+	
+	//check wall collision, move accordingly in each dimension
+	if (mBB.left() + vel.x < W_min.x)
+		T.x = W_min.x-mBB.left();//These somehow got reversed...be careful	
+	else if (mBB.right() + vel.x > W_max.x)
+		T.x = W_max.x - mBB.right();
+	else
+		T.x += vel.x;
+
+	if (mBB.bottom() + vel.y < W_min.y){
+		T.y = W_min.y-mBB.bottom();
+		ground();
+	}
+	else if (mBB.top() + vel.y > W_max.y)
+		T.y = W_max.y-mBB.top();
+	else
+		T.y += vel.y;
+
+	//Note the Z inversion...	
+	if (mBB.near() + vel.z > W_min.z)
+		T.z = W_min.z-mBB.near();
+	else if (mBB.far() + vel.z < W_max.z)
+		T.z = W_max.z - mBB.far();
+	else
+		T.z += vel.z;
+	
+	translate(T);
+
+	return T;
 }

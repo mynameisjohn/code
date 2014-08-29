@@ -1,11 +1,12 @@
 #include "Level.h"
 #include <glm/gtx/transform.hpp> 
 
-const vec3 wallMin(-10000, -60300, -2000);
-const vec3 wallMax(17000, 600, -50020);
+const vec3 wallMin(-1000, -600, -2000);
+const vec3 wallMax(7000, 600, -4000);
 
-std::vector<Drawable> initLevel(JShader& shader, Population& pop){
-	std::vector<Drawable> drawables;
+std::unique_ptr<Population> initLevel(JShader& shader){
+	std::unique_ptr<Population> pop(new Population());
+	
 	glm::mat4 MV;
 	vec3 color;
 	
@@ -13,43 +14,49 @@ std::vector<Drawable> initLevel(JShader& shader, Population& pop){
 	MV = glm::translate(vec3(0, 999, 2500)) *
 		  glm::scale(vec3(400, 400, -400));
 	color = vec3(0.2, 0.4f, 0.8f);
-   drawables.push_back(initPlayer(MV, color, shader, pop));
+	initPlayer(MV, color, shader, pop->getPlayer());
 	
 	MV = glm::translate(vec3(1500, -600, -2500)) *
 		  glm::scale(vec3(400, 400, -400));
 	color = vec3(0.4f, 0.8f, 0.2f);
-	drawables.push_back(initObstacle(MV,color,shader,pop));
+	pop->addObs(initObstacle(MV, color, shader));
  
 	MV = glm::translate(vec3(500, -600, -2500)) *
 		  glm::scale(vec3(400, 400, -400));
-   drawables.push_back(initObstacle(MV, color, shader, pop));
+	pop->addObs(initObstacle(MV, color, shader));
+	
+	MV = glm::translate(vec3(1000, -600, -3500)) *
+		  glm::scale(vec3(400, 400, -400));
+	color = vec3(0.8f, 0.4f, 0.2f);
+	pop->addActiveEnt(initAe(MV, color, shader));
 	
 	color=vec3(1.f, 1.f, 1.f);
+	
 	//floor...
 	MV = glm::translate(glm::vec3(-1000, -600, -2000)) * 
 		  glm::rotate((float)(M_PI/2.f), glm::vec3(1, 0, 0)) * 
 		  glm::scale(glm::vec3(8000, -2000, -2));
-   drawables.push_back(initWall(MV, color, shader, pop));
+	pop->addObs(initObstacle(MV, color, shader));
 	
 	//back wall
 	MV = glm::translate(glm::vec3(-1000, -600, -4000)) * 
 		  glm::scale(glm::vec3(8000, 2500, -2));
-   drawables.push_back(initWall(MV, color, shader, pop));
+	pop->addObs(initObstacle(MV, color, shader));
 
 	MV = glm::translate(glm::vec3(-1000, -600, -2000)) * 
 		  glm::rotate((float)(M_PI/2.f), glm::vec3(0, 1, 0)) * 
 		  glm::scale(glm::vec3(2000, 2500, -2));
-   drawables.push_back(initWall(MV, color, shader, pop));
+	pop->addObs(initObstacle(MV, color, shader));
 
 	MV = glm::translate(glm::vec3(7000, -600, -2000)) * 
 		  glm::rotate((float)(M_PI/2.f), glm::vec3(0, 1, 0)) * 
 		  glm::scale(glm::vec3(2000, 2500, -2));
-   drawables.push_back(initWall(MV, color, shader, pop));
+	pop->addObs(initObstacle(MV, color, shader));
 
-	return drawables;
+	return pop;
 }
 
-Drawable initPlayer(glm::mat4 MV, vec3 color, JShader& shader, Population& pop){
+void initPlayer(glm::mat4 MV, vec3 color, JShader& shader, Player * playerPtr){
 	Drawable dr;
 	BoundBox bb;
 	Collider c;
@@ -64,17 +71,16 @@ Drawable initPlayer(glm::mat4 MV, vec3 color, JShader& shader, Population& pop){
    c.addSub(rect);
    rect = iRect(0, 20, 40, 20);
    c.addSub(rect);
-	
-	Player * playerPtr = pop.getPlayer();
-	dr = initCube(MV, shader);
    playerPtr->setCol(c);
-   dr.setEntity((Entity *)playerPtr);
+	
+	dr = initCube(MV, shader);
    dr.setColor(color);
+	playerPtr->addDrawable(dr);
 
-	return dr;
+	return;
 }
 
-Drawable initObstacle(glm::mat4 MV, vec3 color, JShader& shader, Population& pop){
+Obstacle initObstacle(glm::mat4 MV, vec3 color, JShader& shader){
 	Obstacle obs;
 	Drawable dr;
 	BoundBox bb;
@@ -90,16 +96,16 @@ Drawable initObstacle(glm::mat4 MV, vec3 color, JShader& shader, Population& pop
    c.addSub(rect);
    rect = iRect(0, 20, 40, 20);
    c.addSub(rect);
+	obs.setCol(c);
 	
 	dr = initCube(MV, shader);
-	obs.setCol(c);
-   dr.setEntity(pop.addObs(obs));
    dr.setColor(color);
+	obs.addDrawable(dr);
 	
-	return dr;
+	return obs;
 }
 
-Drawable initAe(glm::mat4 MV, vec3 color, JShader& shader, Population& pop){
+ActiveEnt initAe(glm::mat4 MV, vec3 color, JShader& shader){
    ActiveEnt aE;
 	Drawable dr;
 	BoundBox bb;
@@ -115,16 +121,16 @@ Drawable initAe(glm::mat4 MV, vec3 color, JShader& shader, Population& pop){
    c.addSub(rect);
    rect = iRect(0, 20, 40, 20);
    c.addSub(rect);
+	aE.setCol(c);
 	
 	dr = initCube(MV, shader);
-	aE.setCol(c);
-   dr.setEntity(pop.addActiveEnt(aE));
    dr.setColor(color);
+	aE.addDrawable(dr);
 	
-	return dr;
+	return aE;
 }
 
-Drawable initWall(glm::mat4 MV, vec3 color, JShader& shader, Population& pop){
+Obstacle initWall(glm::mat4 MV, vec3 color, JShader& shader){
 	Obstacle obs;
 	Drawable dr;
 	BoundBox bb;
@@ -140,11 +146,11 @@ Drawable initWall(glm::mat4 MV, vec3 color, JShader& shader, Population& pop){
    c.addSub(rect);
    rect = iRect(0, 20, 40, 20);
    c.addSub(rect);
+	obs.setCol(c);
 	
 	dr = initQuad(MV, shader);
-	obs.setCol(c);
-   dr.setEntity(pop.addObs(obs));
    dr.setColor(color);
+	obs.addDrawable(dr);
 	
-	return dr;
+	return obs;
 }

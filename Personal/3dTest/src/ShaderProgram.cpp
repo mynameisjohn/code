@@ -100,3 +100,21 @@ GLuint ShaderProgram::loadShaderFromFile(std::string path, GLenum shaderType){
 
 	return shaderID;
 }
+
+GLint ShaderProgram::getAttribHandle(std::string name){
+	GLint handle = glGetAttribLocation(mProgramID, name.c_str());
+	if (handle==-1){
+		printf("%s is not a valid shader program variable.\n",name.c_str());
+		return -1;
+	}
+	return handle;
+}
+
+GLint ShaderProgram::getUniformHandle(std::string name){
+	GLint handle = glGetUniformLocation(mProgramID, name.c_str());
+	if (handle==-1){
+		printf("%s is not a valid shader program variable.\n",name.c_str());
+		return -1;
+	}
+	return handle;
+}

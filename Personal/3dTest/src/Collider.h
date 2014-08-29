@@ -17,18 +17,20 @@ class Collider{
 		void setWalls(vec3 min, vec3 max);
 		void clearSub();
 		void translate(vec3 trans);
-		bool move(vec3 vel);
+		void ground();
+      char collidesWith(Collider&);
 		bool collidesX(Collider&);
       bool collidesY(Collider&);
 		bool collidesZ(Collider&);
-      char collidesWith(Collider&);
 		bool overlapsWith(Collider&);
+		bool isGrounded();
 		float toLeft(Collider& c);
 		float toRight(Collider& c);
 		float toBottom(Collider& c);
 		float toTop(Collider& c);
 		float toNear(Collider& c);
 		float toFar(Collider& c);
+		vec3 move(vec3 vel);
 		vec3 getPos();
 		vec3 center();
 	private:
@@ -36,6 +38,7 @@ class Collider{
 		std::vector<iRect> mSubs;
 		vec3 W_min, W_max;
 		std::map<Collider *, ColBuf> cBufMap;
+		bool grounded;
 	public:
 		/* 
 			I'll re-inline these when the time comes

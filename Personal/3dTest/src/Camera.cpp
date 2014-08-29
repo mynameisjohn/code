@@ -1,6 +1,9 @@
 #include "Camera.h"
+#include <GL/glew.h>
+#include <GL/gl.h>
 #include <glm/glm.hpp>
 #include <glm/gtx/transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 Camera::Camera(){
 	buf=200.f; 
@@ -21,20 +24,20 @@ void Camera::translate(vec3 trans){
 }
 
 //what a strange method...
-void Camera::push(vec3 center){
+void Camera::push(glm::vec4 player){
 	float dX;
 
-	dX = (center.x-mBB.left());
+	dX = (player.x-mBB.left());
 	//printf("%lf\t",dX);	
 	if (dX < buf){//don't sweat the small stuff...
-		translate(vec3(40.f, 0, 0));
+		translate(vec3(player.w, 0, 0));
 		return;
 	}
 
-	dX = (mBB.right() - center.x);
+	dX = (mBB.right() - player.x);
 	//printf("%lf\n",dX);	
 	if (dX < buf){
-		translate(vec3(-40.f, 0, 0));
+		translate(vec3(-player.w, 0, 0));
 	}
 
 	return;
@@ -54,4 +57,8 @@ void Camera::rightMult(mat4 m){
 
 mat4 Camera::getProjMat(){
 	return projMat;
+}
+
+void Camera::updateProj(GLint projHandle){
+	glUniformMatrix4fv(projHandle, 1, GL_FALSE, glm::value_ptr(projMat));
 }

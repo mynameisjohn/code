@@ -16,29 +16,39 @@ Population::~Population(){
 	//NYI
 }
 
+void Population::draw(int MVHandle, int ColorHandle){
+	player.draw(MVHandle, ColorHandle);
+
+	ObsPtrVec::iterator obsIt;
+	AePtrVec::iterator aeIt;
+
+	for (obsIt=obsVec.begin(); obsIt!=obsVec.end(); obsIt++)
+		obsIt->get()->draw(MVHandle, ColorHandle);
+	
+	for (aeIt=aeVec.begin(); aeIt!=aeVec.end(); aeIt++)
+		aeIt->get()->draw(MVHandle, ColorHandle);
+}
+
 void Population::setPlayer(Player p){
 	player = p;
 }
 
 //These two vectors are held by smart pointers so I can polymorphize
-Entity * Population::addObs(Obstacle obs){//default copy constructor???
+void Population::addObs(Obstacle obs){//default copy constructor???
 	obsVec.push_back(std::unique_ptr<Obstacle>(new Obstacle(obs)));
-	
-	return obsVec.back().get();
 }
 
-Entity * Population::addActiveEnt(ActiveEnt aE){
+void Population::addActiveEnt(ActiveEnt aE){
 	aeVec.push_back(std::unique_ptr<ActiveEnt>(new ActiveEnt(aE)));
-
-	return aeVec.back().get();
 }
 
 void Population::handleKey(int k){
 	player.handleKey(k);
 }
 
-vec3 Population::move(){
+glm::vec4 Population::move(){
 	ObsPtrVec::iterator obsIt;
+	AePtrVec::iterator aeIt;
 
 	//move with respect to (WRT) walls and obstacles	
 	player.moveWRT_walls();
@@ -46,12 +56,28 @@ vec3 Population::move(){
 		player.moveWRT_ent(*(*obsIt));
 	}
 
-	return player.center();
+	for (aeIt=aeVec.begin(); aeIt!=aeVec.end(); aeIt++){
+		aeIt->get()->moveWRT_walls();
+		for (obsIt=obsVec.begin(); obsIt!=obsVec.end(); obsIt++){
+			aeIt->get()->moveWRT_ent(*(*obsIt));
+		}
+	}
+	
+
+	return glm::vec4(player.center(), fabs(player.getVel().x));
 }
 
 void Population::update(){
+	ObsPtrVec::iterator obsIt;
+	AePtrVec::iterator aeIt;
+
 	player.update();
+	
+	for (aeIt=aeVec.begin(); aeIt!=aeVec.end(); aeIt++)
+		aeIt->get()->update();
 	//printf("It's really %ld\n",(long)(&obsVec[0]));
+	for (obsIt=obsVec.begin(); obsIt!=obsVec.end(); obsIt++)
+		obsIt->get()->update();
 }
 /*
 void Population::initObs(int n){

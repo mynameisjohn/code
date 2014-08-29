@@ -2,14 +2,18 @@
 //#include <glm/gtx/transform.hpp>
 
 JShader::JShader(){
-	mMVPHandle = -1;
-	mColorHandle = -1;
-	mPosHandle = -1;
+	u_MVHandle = -1;
+	u_ProjHandle = -1;
+	u_ColorHandle = -1;
+	a_PosHandle = -1;
+	a_TexCoordHandle = -1;
 	mVS = 0;
 	mFS = 0;
 }
 
 bool JShader::loadProgram(){
+	GLint success = GL_TRUE;	
+	
 	if (!mVS){
 		printf("Missing vertex shader\n");
 		return false;
@@ -25,7 +29,6 @@ bool JShader::loadProgram(){
 	glAttachShader(mProgramID, mFS);
 	glLinkProgram(mProgramID);
 
-	GLint success = GL_TRUE;
 	glGetProgramiv(mProgramID, GL_LINK_STATUS, &success);
 	if (success != GL_TRUE){
 		printf("Error linking shader program %d. \n", mProgramID);
@@ -34,50 +37,51 @@ bool JShader::loadProgram(){
 		return false;
 	}
 
-	mPosHandle = glGetAttribLocation(mProgramID, "vPosition");
-   if (mPosHandle == -1)
-      printf("%s is not a valid shader program variable.\n","vPosition");
+	a_PosHandle = getAttribHandle("a_Position");
+	if (a_PosHandle < 0)
+		return false;
+	
+	a_TexCoordHandle = getAttribHandle("a_TexCoord");
+	if (a_TexCoordHandle < 0)
+		return false;
+	
+	u_ColorHandle = getUniformHandle("u_Color");
+	if (u_ColorHandle < 0)
+		return false;
 
-	mColorHandle = glGetUniformLocation(mProgramID, "fColor");
-	if (mColorHandle == -1)
-		printf("%s is not a valid shader program variable.\n","fColor");
+	u_ProjHandle = getUniformHandle("u_Proj");
+	if (u_ProjHandle < 0)
+		return false;
+
+	u_MVHandle = getUniformHandle("u_MV");
+	if (u_MVHandle < 0)
+		return false;
 /*
-	mProjHandle = glGetUniformLocation(mProgramID, "projMat");
-   if (mProjHandle == -1)
-      printf("%s is not a valid shader program variable.\n","projMat");
-*/
-	mMVPHandle = glGetUniformLocation(mProgramID, "MVPMat");
-   if (mMVPHandle == -1)
-      printf("%s is not a valid shader program variable.\n","MVPMat");
-/*
-	int DIM = 100;
-	int th = 8;
-	int PXA[DIM*DIM];
-	for (int y=0; y<DIM; y++){
-		for (int x=0; x<DIM; x++){
-			if (x<th || x>DIM-th || y<th || y>DIM-th)
-				PXA[y*DIM+x] = 0xFF000000;
-			else
-				PXA[y*DIM+x] = 0xFFFFFFFF;
-		}
+	a_PosHandle = glGetAttribLocation(mProgramID, "vPosition");
+   if (a_PosHandle == -1){
+      printf("%s is not a valid shader program variable.\n","vPosition");
+		return false;
 	}
 
-	glGenTextures(1, &texture);
-	glBindTexture(GL_TEXTURE_2D, texture);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, DIM, DIM, 0, GL_RGBA, GL_UNSIGNED_BYTE, PXA);
-	// Set filtering
-   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-*/
-	mTexCoordHandle = glGetAttribLocation(mProgramID, "a_TexCoord");
-   if (mTexCoordHandle == -1)
+	u_ColorHandle = glGetUniformLocation(mProgramID, "fColor");
+	if (u_ColorHandle == -1){
+      printf("%s is not a valid shader program variable.\n","fColor");
+      return false;
+   }
+
+	u_ProjHandle = glGetUniformLocation(mProgramID, "P");
+   if (u_ProjHandle == -1){
+      printf("%s is not a valid shader program variable.\n","P");
+      return false;
+   }
+
+	u_MVHandle = glGetUniformLocation(mProgramID, "MV");
+   if (mMVPHandle == -1)
+      printf("%s is not a valid shader program variable.\n","MV");
+	
+	a_TexCoordHandle = glGetAttribLocation(mProgramID, "a_TexCoord");
+   if (a_TexCoordHandle == -1)
       printf("%s is not a valid shader program variable.\n","a_TexCoord");
-/*
-   mTexHandle = glGetUniformLocation(mProgramID, "u_Texture");
-   if (mTexHandle == -1)
-      printf("%s is not a valid shader program variable.\n","u_Texture");
 */
 	return true;
 }
@@ -91,19 +95,6 @@ bool JShader::loadVert(std::string vertStr){
 	return true;
 }
 
-GLint JShader::getPosHandle(){
-	return mPosHandle;
-}
-
-GLuint JShader::getTexCoordHandle(){
-	return mTexCoordHandle;
-}
-
-/*
-void JShader::updateSampler(){
-	glUniform1i(mTexHandle, 0);
-}
-*/
 bool JShader::loadFrag(std::string fragStr){
    mFS = loadShaderFromFile(fragStr,GL_FRAGMENT_SHADER);
    if (mFS == 0){
@@ -113,20 +104,47 @@ bool JShader::loadFrag(std::string fragStr){
 	return true;
 }
 
-void JShader::updateColor(GLfloat * color){
-	glUniform4f(mColorHandle, color[0], color[1], color[2], color[3]);
+GLint JShader::getPosHandle(){
+	return a_PosHandle;
 }
+
+GLint JShader::getTexCoordHandle(){
+	return a_TexCoordHandle;
+}
+
+GLint JShader::getMVHandle(){
+	return u_MVHandle;
+}
+
+GLint JShader::getProjHandle(){
+	return u_ProjHandle;
+}
+
+GLint JShader::getColorHandle(){
+	return u_ColorHandle;
+}
+
 /*
-void JShader::updateProj(GLfloat * proj){
-   glUniformMatrix4fv(mProjHandle, 1, GL_FALSE, proj);
+void JShader::updateSampler(){
+	glUniform1i(mTexHandle, 0);
 }
 */
+
+/*
+void JShader::updateColor(GLfloat * color){
+	glUniform4f(u_ColorHandle, color[0], color[1], color[2], color[3]);
+}
+
+void JShader::updateProj(GLfloat * proj){
+   glUniformMatrix4fv(u_ProjHandle, 1, GL_FALSE, proj);
+}
+
 //Maybe do this by reference? Idk
 void JShader::updateMVP(GLfloat * MVP){
 	glUniformMatrix4fv(mMVPHandle, 1, GL_FALSE, MVP);
 }
-/*
+
 void JShader::updateMV(GLfloat * MV){
-	glUniformMatrix4fv(mMVHandle, 1, GL_FALSE, MV);
+	glUniformMatrix4fv(u_MVHandle, 1, GL_FALSE, MV);
 }
 */
