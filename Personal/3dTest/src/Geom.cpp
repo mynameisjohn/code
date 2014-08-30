@@ -5,7 +5,8 @@
 #include "Drawable.h"
 #include "Textures.h"
 
-Drawable initQuad(glm::mat4 MV, JShader& shader){
+//Drawable initQuad(glm::mat4 MV, JShader& shader){
+Drawable initQuad(JShader& shader){
    const int nVert=4, dim=3, nIndices=4;
    const int vStride = nVert*dim*sizeof(GLint);
    const int tStride = nVert*2*sizeof(GLfloat);
@@ -52,13 +53,14 @@ Drawable initQuad(glm::mat4 MV, JShader& shader){
 
 	dr.setVAO(tmpVAO);
 	dr.setTex(outlineTexture());
-	dr.setMV(MV);
+//	dr.setMV(MV);
 	dr.setNElements(nIndices);
 
    return dr;
 }
 
-Drawable initCube(glm::mat4 MV, JShader& shader){
+//Drawable initCube(glm::mat4 MV, JShader& shader){
+Drawable initCube(JShader& shader){
    const int nVert=24, dim=3, nIndices=36;
    const int vStride = nVert*dim*sizeof(GLint);
    const int tStride = nVert*2*sizeof(GLfloat);
@@ -167,7 +169,7 @@ Drawable initCube(glm::mat4 MV, JShader& shader){
 
 	dr.setVAO(tmpVAO);
 	dr.setTex(outlineTexture());
-	dr.setMV(MV);
+//	dr.setMV(MV);
 	dr.setNElements(faceCount*3);
 
    return dr;

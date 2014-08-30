@@ -30,14 +30,14 @@ void Camera::push(glm::vec4 player){
 	dX = (player.x-mBB.left());
 	//printf("%lf\t",dX);	
 	if (dX < buf){//don't sweat the small stuff...
-		translate(vec3(player.w, 0, 0));
+		translate(vec3(fabs(player.w), 0, 0));
 		return;
 	}
 
 	dX = (mBB.right() - player.x);
 	//printf("%lf\n",dX);	
 	if (dX < buf){
-		translate(vec3(-player.w, 0, 0));
+		translate(vec3(-fabs(player.w), 0, 0));
 	}
 
 	return;

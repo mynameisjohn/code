@@ -1,9 +1,11 @@
 #include <SDL2/SDL.h>
 
 #include "Player.h"
+#include <glm/gtx/transform.hpp>
 
 Player::Player() : ActiveEnt(){
 	mDash = 1.5f;
+	th=0.f;
 }
 
 Player::Player(Collider c) : ActiveEnt(c){
@@ -15,7 +17,11 @@ Player::~Player(){
 }
 
 void Player::update(){
-	vec3 pos = getPos();
+	vec3 x,y;
+	x = center() + vec3(320.f*cos(th), 0.f, 320.f*sin(th));
+	th+=0.1f;
+	y = center() + vec3(320.f*cos(th), 0.f, 320.f*sin(th));
+	mDrawables[1].leftMultMV(glm::translate(y-x));
 
 	if (mCollider.isGrounded())
 		mVel.y=0.f;

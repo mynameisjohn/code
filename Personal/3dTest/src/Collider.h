@@ -4,7 +4,7 @@
 #include <vector>
 #include <map>
 #include "BoundBox.h"
-#include "iRect.h"
+#include "BoundRect.h"
 #include "ColBuf.h"
 
 class Collider{
@@ -13,29 +13,29 @@ class Collider{
 		Collider(vec3 w_min, vec3 w_max, BoundBox bb);
 		~Collider();
 		void setBB(BoundBox);
-		void addSub(iRect sub);
+		void addSub(BoundRect sub);
 		void setWalls(vec3 min, vec3 max);
 		void clearSub();
 		void translate(vec3 trans);
 		void ground();
-      char collidesWith(Collider&);
-		bool collidesX(Collider&);
-      bool collidesY(Collider&);
-		bool collidesZ(Collider&);
-		bool overlapsWith(Collider&);
+      char collidesWith(Collider *);
+		bool collidesX(Collider *);
+      bool collidesY(Collider *);
+		bool collidesZ(Collider *);
+		bool overlapsWith(Collider *);
 		bool isGrounded();
-		float toLeft(Collider& c);
-		float toRight(Collider& c);
-		float toBottom(Collider& c);
-		float toTop(Collider& c);
-		float toNear(Collider& c);
-		float toFar(Collider& c);
+		float toLeft(Collider * c);
+		float toRight(Collider * c);
+		float toBottom(Collider * c);
+		float toTop(Collider * c);
+		float toNear(Collider * c);
+		float toFar(Collider * c);
 		vec3 move(vec3 vel);
 		vec3 getPos();
 		vec3 center();
 	private:
 		BoundBox mBB;
-		std::vector<iRect> mSubs;
+		std::vector<BoundRect> mSubs;
 		vec3 W_min, W_max;
 		std::map<Collider *, ColBuf> cBufMap;
 		bool grounded;
@@ -45,22 +45,22 @@ class Collider{
 		inline vec3 getPos(){
 			return mBB.getPos();
 		}
-		inline int toLeft(Collider& c){
+		inline int toLeft(Collider * c){
 			return c.mBB.left()-mBB.right(); 
 		}
-		inline int toRight(Collider& c){
+		inline int toRight(Collider * c){
          return c.mBB.right()-mBB.left(); 
       }
-		inline int toBottom(Collider& c){
+		inline int toBottom(Collider * c){
          return c.mBB.bottom()-mBB.top(); 
       }
-		inline int toTop(Collider& c){
+		inline int toTop(Collider * c){
          return c.mBB.top()-mBB.bottom(); 
       }
-		inline int toNear(Collider& c){
+		inline int toNear(Collider * c){
 			return c.mBB.near() - mBB.far();
 		}
-		inline int toFar(Collider& c){
+		inline int toFar(Collider * c){
          return c.mBB.near()-mBB.far(); 
       }
 		inline vec3 center(){

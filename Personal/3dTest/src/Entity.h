@@ -13,20 +13,21 @@ class Entity{
 		void translate(vec3);
 		void addDrawable(Drawable dr);
 		void draw(int MVHandle, int ColorHandle);
-		char collidesWith(Entity& e);
-		bool overlapsWith(Entity& e);
-		float toLeft(Entity&);	
-		float toRight(Entity&);
-		float toBottom(Entity&);
-		float toTop(Entity&);
-		float toNear(Entity&);
-		float toFar(Entity&);
+		char collidesWith(Entity *);
+		bool overlapsWith(Entity *);
+		float toLeft(Entity *);	
+		float toRight(Entity *);
+		float toBottom(Entity *);
+		float toTop(Entity *);
+		float toNear(Entity *);
+		float toFar(Entity *);
+		Collider * getCol();
 		vec3 getPos();
 		vec3 center();
 		virtual void update()=0;
 	protected:
 		Collider mCollider;
-		Drawable mDrawable;
+		std::vector<Drawable> mDrawables;
 		vec3 mTrans;
 	/* These will be inlined when the time comes
 	public:
@@ -36,22 +37,22 @@ class Entity{
 		inline vec3 getPos(){
 			return mCollider.getPos();
 		}
-		inline int toLeft(Entity& e){
+		inline int toLeft(Entity * e){
 			return mCollider.toLeft(e.mCollider);
 		}
-		inline int toRight(Entity& e){
+		inline int toRight(Entity * e){
          return mCollider.toRight(e.mCollider);
       }
-		inline int toBottom(Entity& e){
+		inline int toBottom(Entity * e){
          return mCollider.toBottom(e.mCollider);
       }
-		inline int toTop(Entity& e){
+		inline int toTop(Entity * e){
          return mCollider.toTop(e.mCollider);
       }
-		inline int toNear(Entity& e){
+		inline int toNear(Entity * e){
          return mCollider.toNear(e.mCollider);
       }
-		inline int toFar(Entity& e){
+		inline int toFar(Entity * e){
          return mCollider.toFar(e.mCollider);
       }
 		inline vec3 center(){

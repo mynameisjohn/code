@@ -27,7 +27,7 @@ void Collider::setBB(BoundBox bb){
 	mBB = bb;
 }
 
-void Collider::addSub(iRect sub){
+void Collider::addSub(BoundRect sub){
 	mSubs.push_back(sub);
 }
 
@@ -43,9 +43,11 @@ void Collider::clearSub(){
 void Collider::translate(vec3 trans){
 	mBB.translate(trans);
 	
-	std::vector<iRect>::iterator rectIt;
-	for (rectIt=mSubs.begin(); rectIt!=mSubs.end(); rectIt++)
-		rectIt->translate(trans.x,trans.y);
+	std::vector<BoundRect>::iterator rectIt;
+	for (rectIt=mSubs.begin(); rectIt!=mSubs.end(); rectIt++){
+		rectIt->translate(vec2(trans));
+//		std::cout << rectIt->getPos() << std::endl;
+	}
 }
 
 bool Collider::isGrounded(){
@@ -53,33 +55,35 @@ bool Collider::isGrounded(){
 }
 
 //This whole thing should be inlined or something
-bool Collider::collidesX(Collider& other){
-	return mBB.collidesX(other.mBB);
+bool Collider::collidesX(Collider * other){
+	return mBB.collidesX(other->mBB);
 }
-bool Collider::collidesY(Collider& other){
-	return mBB.collidesY(other.mBB);
-}
-
-bool Collider::collidesZ(Collider& other){
-	return mBB.collidesZ(other.mBB);
+bool Collider::collidesY(Collider * other){
+	return mBB.collidesY(other->mBB);
 }
 
-char Collider::collidesWith(Collider& other){
+bool Collider::collidesZ(Collider * other){
+	return mBB.collidesZ(other->mBB);
+}
+
+char Collider::collidesWith(Collider * other){
 	bool colX, colY, colZ;
-	colX = mBB.collidesX(other.mBB);
-	colY = mBB.collidesY(other.mBB);
-	colZ = mBB.collidesZ(other.mBB);
+	colX = collidesX(other);
+	colY = collidesY(other);
+	colZ = collidesZ(other);
 	
-	return cBufMap[&other].handleCollision(colX, colY, colZ);
+	return cBufMap[other].handleCollision(colX, colY, colZ);
 }
 
 //Checks to see if a) bounding boxes collided and b) one of the sub-rects overlap
-bool Collider::overlapsWith(Collider& other){
+bool Collider::overlapsWith(Collider * other){
+// with this uncommented we don't interact with the map; I think it's ok for now
+// if (collidesX(other) && collidesY(other) && collidesZ(other)){
 	if (collidesWith(other)){
-		std::vector<iRect>::iterator rectIt1, rectIt2;
+		std::vector<BoundRect>::iterator rectIt1, rectIt2;
 		for (rectIt1=mSubs.begin(); rectIt1!=mSubs.end(); rectIt1++){
 			for (rectIt2=mSubs.begin(); rectIt2!=mSubs.end(); rectIt2++){
-				if (rectIt1->overlapsWith(*rectIt2))
+				if (rectIt1->collidesWith(*rectIt2))
 					return true;
 			}
 		}
@@ -87,28 +91,28 @@ bool Collider::overlapsWith(Collider& other){
 	return false;
 }
 
-float Collider::toLeft(Collider& c){
-	return c.mBB.left()-mBB.right(); 
+float Collider::toLeft(Collider * c){
+	return c->mBB.left()-mBB.right(); 
 }
 
-float Collider::toRight(Collider& c){
-	return c.mBB.right()-mBB.left(); 
+float Collider::toRight(Collider * c){
+	return c->mBB.right()-mBB.left(); 
 }
 
-float Collider::toBottom(Collider& c){
-	return c.mBB.bottom()-mBB.top(); 
+float Collider::toBottom(Collider * c){
+	return c->mBB.bottom()-mBB.top(); 
 }
 
-float Collider::toTop(Collider& c){
-	return c.mBB.top()-mBB.bottom(); 
+float Collider::toTop(Collider * c){
+	return c->mBB.top()-mBB.bottom(); 
 }
 
-float Collider::toNear(Collider& c){
-	return c.mBB.near() - mBB.far();
+float Collider::toNear(Collider * c){
+	return c->mBB.near() - mBB.far();
 }
 
-float Collider::toFar(Collider& c){
-	return c.mBB.far()-mBB.near(); 
+float Collider::toFar(Collider * c){
+	return c->mBB.far()-mBB.near(); 
 }
 
 vec3 Collider::center(){
@@ -119,7 +123,7 @@ vec3 Collider::getPos(){
 	return mBB.getPos();
 }
 
-//This just moves the collider with respect to the walls
+//This just moves the collider with respect to the walls - will be phased out soon
 vec3 Collider::move(vec3 vel){
 	grounded=false;
 	vec3 T;
@@ -140,7 +144,7 @@ vec3 Collider::move(vec3 vel){
 		T.y = W_max.y-mBB.top();
 	else
 		T.y += vel.y;
-
+	
 	//Note the Z inversion...	
 	if (mBB.near() + vel.z > W_min.z)
 		T.z = W_min.z-mBB.near();

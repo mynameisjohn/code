@@ -8,12 +8,12 @@
 #include <glm/glm.hpp>
 #include <iostream>
 
-using glm::vec3;
-
-#ifndef VEC_PRINT
-#define VEC_PRINT
+#ifndef VEC3_PRINT
+#define VEC3_PRINT
 std::ostream& operator<<(std::ostream& os, const glm::vec3& vec);
 #endif
+
+using glm::vec3;
 
 class glmBox{
 	public:

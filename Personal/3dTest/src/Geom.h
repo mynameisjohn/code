@@ -4,7 +4,7 @@
 #include "JShader.h"
 #include "Drawable.h"
 
-Drawable initQuad(glm::mat4 MV, JShader& shader);
-Drawable initCube(glm::mat4 MV, JShader& shader);
+Drawable initQuad(JShader& shader);
+Drawable initCube(JShader& shader);
 
 #endif

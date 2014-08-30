@@ -53,22 +53,28 @@ glm::vec4 Population::move(){
 	//move with respect to (WRT) walls and obstacles	
 	player.moveWRT_walls();
 	for (obsIt=obsVec.begin(); obsIt!=obsVec.end(); obsIt++){
-		player.moveWRT_ent(*(*obsIt));
+		player.moveWRT_ent(obsIt->get());
+
 	}
 
 	for (aeIt=aeVec.begin(); aeIt!=aeVec.end(); aeIt++){
 		aeIt->get()->moveWRT_walls();
 		for (obsIt=obsVec.begin(); obsIt!=obsVec.end(); obsIt++){
-			aeIt->get()->moveWRT_ent(*(*obsIt));
+			aeIt->get()->moveWRT_ent(obsIt->get());
 		}
 	}
 	
-	return glm::vec4(player.center(), fabs(player.getVel().x));
+	return glm::vec4(player.center(), player.getVel().x);
 }
 
 void Population::update(){
 	ObsPtrVec::iterator obsIt;
 	AePtrVec::iterator aeIt;
+
+	//Do soft collisions here
+   for (aeIt=aeVec.begin(); aeIt!=aeVec.end(); aeIt++)
+		bool x = (player.overlapsWith(aeIt->get()));
+//			printf("hklsdf\n");
 
 	player.update();
 	

@@ -27,7 +27,7 @@ class Drawable{
 		void leftMultMV(glm::mat4 left);
 		void setNElements(int n);
 		void uploadData(GLint MVHandle, GLint ColorHandle);
-		void draw(GLint MVHandle, GLint ColorHandle);
+		void draw(GLint MVHandle, GLint ColorHandle, vec3 trans);
 		bool isVisible();
 		int getNumElems();
 		GLuint getVAO();

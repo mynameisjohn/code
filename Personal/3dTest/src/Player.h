@@ -14,7 +14,7 @@ class Player: public ActiveEnt{
 		void handleKey(int k);
 	private:
 		KeyboardHandler mHandler;
-		float mDash;
+		float mDash, th;
 };
 
 #endif

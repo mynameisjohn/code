@@ -28,7 +28,7 @@ vec3 ActiveEnt::getVel(){
 /* The goal here is to find the direction in which the last collision
 (bounding box violation) occurred, so that the entity can translate
 right up against it.*/
-void ActiveEnt::moveWRT_ent(Entity& e){
+void ActiveEnt::moveWRT_ent(Entity * e){
 	char last = collidesWith(e);
 
 	switch (last){

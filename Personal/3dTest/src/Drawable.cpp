@@ -55,8 +55,11 @@ void Drawable::setNElements(int n){
 	mElementCount = n;
 }
 
-void Drawable::draw(GLint MVHandle, GLint ColorHandle){
-	uploadData(MVHandle, ColorHandle); //send MV matrix and color to GPU
+void Drawable::draw(GLint MVHandle, GLint ColorHandle, vec3 trans){
+	glUniformMatrix4fv(MVHandle, 1, GL_FALSE, glm::value_ptr(glm::translate(trans)*MV));
+   glUniform4fv(ColorHandle, 1, glm::value_ptr(mColor));
+
+//	uploadData(MVHandle, ColorHandle); //send MV matrix and color to GPU
 	glBindTexture(GL_TEXTURE_2D, mTex); //Make my texture active
 	glBindVertexArray(mVAO); //Bind my VAO
 	glDrawElements(GL_TRIANGLE_STRIP, mElementCount, GL_UNSIGNED_INT, NULL);

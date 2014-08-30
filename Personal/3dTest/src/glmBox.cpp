@@ -1,4 +1,5 @@
 #include "glmBox.h"
+
 std::ostream& operator<<(std::ostream& os, const glm::vec3& vec){
   std::cout << "<" << vec.x << ", " << vec.y << ", " << vec.z << ">";
   return os;
@@ -11,12 +12,12 @@ glmBox::glmBox(){
 
 glmBox::glmBox(vec3 dim){
 	mPos=vec3();
-	mDim=dim;
+	mDim=glm::abs(dim);
 }
 
 glmBox::glmBox(vec3 pos, vec3 dim){
 	mPos=pos;
-	mDim=dim;
+	mDim=glm::abs(dim);
 }
 
 float glmBox::left(){
@@ -53,5 +54,5 @@ vec3 glmBox::getDim(){
 }
 
 vec3 glmBox::center(){
-	return mPos+0.5f*mDim;
+	return mPos+vec3(0.5f, 0.5f, -0.5f)*mDim;
 }
